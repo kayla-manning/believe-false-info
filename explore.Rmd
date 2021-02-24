@@ -1,0 +1,49 @@
+---
+title: Practice Visualizations
+output:
+  html_document:
+    df_print: kable
+---
+
+```{r setup}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+
+# loading packages and reading in the data
+
+{
+  library(tidyverse)
+  library(haven)
+  library(sjlabelled)
+  library(labelled)
+}
+
+survey <- read_dta("data/prri_pluralism_survey.dta") %>% 
+  select(-c(1:8))
+
+dictionary <- look_for(survey, details = TRUE)
+
+
+```
+
+Replicating this paper: https://www.prri.org/research/american-democracy-in-crisis-the-fate-of-pluralism-in-a-divided-nation/
+
+Info on working with labelled data: https://www.pipinghotdata.com/posts/2020-12-23-leveraging-labelled-data-in-r/
+
+Q22: Some people say the following things are important for being truly American. In your opinion, do you think the following is a very important, somewhat important, not too important or not at all important part of being truly American?
+
+```{r}
+
+survey %>% 
+  select(relig, Q22a) %>% 
+  group_by(relig) %>% 
+  count() %>% 
+  arrange(desc(n))
+
+```
+
+
+
