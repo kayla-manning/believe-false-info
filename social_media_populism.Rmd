@@ -1,0 +1,39 @@
+---
+title: Getting my bearings
+output:
+  html_document:
+    df_print: kable
+---
+
+Original paper: https://www-tandfonline-com.ezp-prod1.hul.harvard.edu/doi/pdf/10.1080/1369118X.2019.1668455
+
+
+```{r setup}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+
+# loading packages and reading in the data
+
+{
+  library(tidyverse)
+  library(haven)
+  library(sjlabelled)
+  library(labelled)
+  library(sjPlot)
+}
+
+test <- read_sav("~/Downloads/osf.sav")
+
+# trying to replicate a table in the paper
+
+counts <- test %>% group_by(Past_voting_Wave2, Voting_intentions_Wave2) %>% count()
+
+# lets you see the labeled data
+
+counts %>% sjPlot::view_df()
+
+```
+
