@@ -1,0 +1,25 @@
+StataFileTM:00001:01100:GREC:                          :
+00004:00004:00001:
+*! classname: twowaygraph_g
+*! family: twoway
+*! date: 12 Aug 2019
+*! time: 14:11:39
+*! graph_scheme: s2color
+*! naturallywhite: 1
+*! end
+
+// File created by Graph Editor Recorder.
+// Edit only if you know what you are doing.
+
+.plotregion1.plot3.style.editstyle line(pattern(dash)) editcopy
+// plot3 pattern
+
+// key[1] pattern
+
+// key[1] pattern
+
+.legend.plotregion1.key[1].view.style.editstyle area(linestyle(pattern(dash))) editcopy
+// view pattern
+
+
+// <end>

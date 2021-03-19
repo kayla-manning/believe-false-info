@@ -1,0 +1,18 @@
+StataFileTM:00001:01100:GREC:                          :
+00004:00004:00001:
+*! classname: combinegraph_g
+*! family: combine
+*! date: 13 Aug 2019
+*! time: 13:53:43
+*! graph_scheme: sj
+*! naturallywhite: 1
+*! end
+
+// File created by Graph Editor Recorder.
+// Edit only if you know what you are doing.
+
+.legend.plotregion1.key[1].view.style.editstyle area(linestyle(pattern(dash))) editcopy
+// view pattern
+
+
+// <end>

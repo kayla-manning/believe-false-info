@@ -1,0 +1,212 @@
+---
+title: Getting my bearings
+output:
+  html_document:
+    df_print: kable
+---
+
+```{r setup}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+
+{
+  library(tidyverse)
+  library(broom)
+  library(haven)
+  library(margins)
+}
+
+
+```
+
+
+Just working through the do file in order
+
+https://www-journals-uchicago-edu.ezp-prod1.hul.harvard.edu/doi/pdf/10.1086/711133
+https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/9ERCTY
+
+```{r party_oil}
+
+working_wide <- read_dta("data/false_info/working_wide.dta")
+
+working_wide %>% 
+  lm(oil ~ pidr, data = .)
+
+```
+```{r table_1}
+
+working_long <- read_dta("data/false_info/working_long.dta") 
+  
+working_long %>% 
+  filter(independent == 0,
+         issue2 == 1) %>% 
+  lm(rum ~ consis * rep_i, data = .) 
+
+working_long %>% 
+  filter(nonlean == 1,
+         issue2 == 1) %>% 
+  lm(rum ~ consis * rep_i, data = .) 
+
+working_long %>% 
+  filter(independent == 0,
+         issue2 == 2) %>% 
+  lm(rum ~ consis * rep_i, data = .) 
+
+working_long %>% 
+  filter(nonlean == 1,
+         issue2 == 2) %>% 
+  lm(rum ~ consis * rep_i, data = .) 
+
+working_long %>% 
+  filter(independent == 0) %>% 
+  lm(rum ~ consis * rep_i + as_factor(issue2), data = .) 
+
+working_long %>% 
+  filter(nonlean == 1) %>% 
+  lm(rum ~ consis * rep_i + as_factor(issue2), data = .) 
+
+```
+
+```{r section_6}
+
+# SI Section 6: text-based claims
+
+study2_long <- read_dta("data/false_info/study2_long.dta") %>% 
+    mutate(consis = as_factor(consis),
+           rep_i = as_factor(rep_i),
+           positly = as_factor(positly),
+           isuse = as_factor(issue))
+
+study2_long %>% 
+  filter(independent == 0,
+         issue == "_ohio") %>% 
+  lm(rum ~ as_factor(consis) * rep_i * positly, data = .)
+
+study2_long %>% 
+  filter(independent == 0,
+         issue == "_wisc") %>% 
+  lm(rum ~ as_factor(consis) * rep_i * positly, data = .)
+
+```
+
+# **NOT SURE HOW TO MAKE MARGINAL EFFECT WORK**
+
+```{r table_si2}
+
+# continuing to work through do file
+
+{
+  mod_1 <- study2_long %>% 
+  filter(independent == 0,
+         issue == "_ohio") 
+  
+  mod_1 <- lm(rum ~ consis * rep_i + positly, data = mod_1)
+  mod_1
+  
+  # marginal effect mentioned in footnote... need to figure out how to make this work
+  
+  # margins(mod_1, at = list(consis = study2_long$rep_i), variables = "consis")
+  
+  study2_long %>% 
+    filter(nonlean == 1,
+           issue == "_ohio") %>% 
+    lm(rum ~ consis * rep_i + positly, data = .)
+}
+
+{
+  study2_long %>% 
+    filter(independent == 0,
+           issue == "_wisc") %>% 
+    lm(rum ~ consis * rep_i + positly, data = .)
+  
+  # do margins
+  
+  study2_long %>% 
+    filter(nonlean == 1,
+           issue == "_wisc") %>% 
+    lm(rum ~ consis * rep_i + positly, data = .)
+}
+
+{
+  study2_long %>% 
+    filter(independent == 0,
+           issue %in% c("_wisc", "_ohio")) %>% 
+    lm(rum ~ consis * rep_i + positly, data = .)
+  
+  # do margins
+  
+  study2_long %>% 
+    filter(nonlean == 1,
+           issue %in% c("_wisc", "_ohio")) %>% 
+    lm(rum ~ consis * rep_i + positly, data = .)
+}
+
+
+```
+```{r si_section_6}
+
+# SI section 6, text-based claims
+
+study2_long %>% 
+  filter(independent == 0,
+         issue %in% c("_incomp1", "_incomp2")) %>% 
+  lm(rum ~ consis * rep_i + issue2 + acq_comb, data = .)
+
+study2_long %>% 
+  filter(independent == 0,
+         issue %in% c("_hyp1", "_hyp2")) %>% 
+  lm(rum ~ consis * rep_i + issue2 + acq_comb, data = .)
+
+study2_long %>% 
+  filter(independent == 0,
+         issue %in% c("_breach1", "_breach2")) %>% 
+  lm(rum ~ consis * rep_i + issue2 + acq_comb, data = .)
+
+```
+```{r table_si3}
+
+working_long %>% 
+  filter(ideology2 != 4,
+         issue2 == 1) %>% 
+  lm(rum ~ iconsis * cons_i, data = .)
+
+working_long %>% 
+  filter(ideology2 != 4,
+         issue2 == 2) %>% 
+  lm(rum ~ iconsis * cons_i, data = .)
+
+working_long %>% 
+  filter(ideology2 != 4) %>% 
+  lm(rum ~ iconsis * cons_i + issue2, data = .)
+
+```
+
+```{r table_si4}
+
+study2_long %>% 
+  filter(ideology2 != 4,
+         issue == "_ohio") %>% 
+  lm(rum ~ iconsis * cons_i, data = .)
+
+study2_long %>% 
+  filter(ideology2 != 4,
+         issue == "_wisc") %>% 
+  lm(rum ~ iconsis * cons_i, data = .)
+
+study2_long %>% 
+  filter(ideology2 != 4,
+         issue %in% c("_wisc", "_ohio")) %>% 
+  lm(rum ~ iconsis * cons_i, data = .)
+
+
+```
+
+```{r table_si5}
+
+
+
+```
+
