@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
   library(broom)
   library(haven)
   library(margins)
+  library(sjlabelled)
 }
 
 
@@ -30,51 +31,96 @@ https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/9ERCTY
 
 ```{r party_oil}
 
-working_wide <- read_dta("data/false_info/working_wide.dta")
+working_wide <- read_dta("replication_data/working_wide.dta")
 
 working_wide %>% 
   lm(oil ~ pidr, data = .)
 
 ```
+
 ```{r table_1}
 
-working_long <- read_dta("data/false_info/working_long.dta") 
+working_long <- read_dta("replication_data/working_long.dta") 
   
-working_long %>% 
+mod1 <- working_long %>% 
   filter(independent == 0,
          issue2 == 1) %>% 
   lm(rum ~ consis * rep_i, data = .) 
 
-working_long %>% 
+mod2 <- working_long %>% 
   filter(nonlean == 1,
          issue2 == 1) %>% 
   lm(rum ~ consis * rep_i, data = .) 
 
-working_long %>% 
+mod3 <- working_long %>% 
   filter(independent == 0,
          issue2 == 2) %>% 
   lm(rum ~ consis * rep_i, data = .) 
 
-working_long %>% 
+mod4 <- working_long %>% 
   filter(nonlean == 1,
          issue2 == 2) %>% 
   lm(rum ~ consis * rep_i, data = .) 
 
-working_long %>% 
+mod5 <- working_long %>% 
   filter(independent == 0) %>% 
   lm(rum ~ consis * rep_i + as_factor(issue2), data = .) 
 
-working_long %>% 
+mod6 <- working_long %>% 
   filter(nonlean == 1) %>% 
   lm(rum ~ consis * rep_i + as_factor(issue2), data = .) 
 
+tab_model(mod1, mod2, mod3, mod4, mod5, mod6,
+          show.ci = FALSE,
+          show.se = TRUE,
+          p.style = "stars",
+          collapse.se = TRUE,
+          pred.labels = c("Intercept", 
+                          "Party-Consistent = 1", 
+                          "Republican = 1", 
+                          "Consistent * Republican",
+                          "Wisconsin = 1"),
+          dv.labels = c("Ohio", "Ohio", "Wisconsin", "Wisconsin",
+                        "Pooled", "Pooled"),
+          title = "Table 1: Democrats and Republicans are Equally Subject to Consistency Pressures",
+          digits = 3)
+
 ```
+
+```{r plot_for_table_1}
+
+# not part of the actual study, but thought it would be good to visualize
+
+working_long %>% 
+  mutate(consis = as_factor(consis)) %>% 
+  drop_na(consis, rep_i) %>% 
+  ggplot(aes(rep_i, rum)) +
+  geom_jitter(aes(color = consis), alpha = 0.5, width =) +
+  geom_smooth(method = "lm", color = "black") +
+  theme_classic() +
+  labs(x = "Republican?",
+       y = "Belief in rumor",
+       title = "Neither party exhibited greater proclivity to believe rumor") +
+  scale_x_continuous(breaks = c(0, 1),
+                     labels = c(0, 1)) +
+  scale_y_continuous(breaks = seq(0, 1, by = 0.25),
+                     labels = c("Definitely did not occur", 
+                                "Probably occurred",
+                                "Might have occurred",
+                                "Probably did not occur",
+                                "Definitely occurred")) +
+  scale_color_manual(labels = c("Inconsistent with party",
+                                "Consistent with party"),
+                     values = c("lightblue", "navyblue"))
+
+```
+
 
 ```{r section_6}
 
 # SI Section 6: text-based claims
 
-study2_long <- read_dta("data/false_info/study2_long.dta") %>% 
+study2_long <- read_dta("replication_data/study2_long.dta") %>% 
     mutate(consis = as_factor(consis),
            rep_i = as_factor(rep_i),
            positly = as_factor(positly),

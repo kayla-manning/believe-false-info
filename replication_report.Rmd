@@ -1,0 +1,21 @@
+---
+title: Replication Report
+author: Kayla Manning
+date: May 5, 2021
+output:
+  pdf_document:
+    df_print: kable
+---
+
+```{r setup}
+
+knitr::opts_chunk(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+
+library(tidyverse)
+
+```
+
