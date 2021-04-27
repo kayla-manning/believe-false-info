@@ -2,20 +2,507 @@
 title: Replication Report
 author: Kayla Manning
 date: May 5, 2021
-output:
-  pdf_document:
-    df_print: kable
+output: pdf_document
+fig.caption: yes
+keep_text: yes
+header-includes:
+  - \usepackage{float}
+  - \usepackage[labelformat=empty]{caption}
 ---
 
-```{r setup}
+# **CROSS-REFERENCE WITH CHECKLIST ON CANVAS**
 
-knitr::opts_chunk(
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(
   echo = FALSE,
   message = FALSE,
   warning = FALSE
 )
 
-library(tidyverse)
+# loading packages
+
+{
+  library(tidyverse)
+  library(broom)
+  library(haven)
+  library(margins)
+  library(sjlabelled)
+  library(sjPlot)
+  library(stargazer)
+}
+
+# getting all data read in up here to clean up the bottom of the file
+
+{
+  working_long <- read_dta("replication_data/working_long.dta") 
+  study2_long <- read_dta("replication_data/study2_long.dta") %>% 
+      mutate(consis = as_factor(consis),
+             rep_i = as_factor(rep_i),
+             positly = as_factor(positly),
+             isuse = as_factor(issue))
+  working_wide <- read_dta("replication_data/working_wide.dta")
+}
+
+# original paper is here
+# https://www-journals-uchicago-edu.ezp-prod1.hul.harvard.edu/doi/pdf/10.1086/711133
 
 ```
+
+# Overview of original paper
+
+## Introduction
+
+With the prevalence of claims of election fraud and Q-Anon conspiracy theories, it seems as if Republican voters exhibit a greater tendency to follow conspiracy theories. Does the prevalence of far-right conspiracy theories result from a greater supply of such rumors spread by political elite or a greater likelihood of believing false information? Previous research about the propensity to accept false information does not differentiate between supply-side and demand-side explanations. In the case of misinformation, *supply-side* explanations have to do with the effectiveness of political elites in spreading such information, and *demand-side* explanations involve the likelihood of citizens believing false information upon receipt. This study focuses on the demand side and examines if Republicans or Democrats believe false political information at different rates.
+
+## Methods
+
+The original researchers conducted a carefully designed experiment to reveal any asymmetries in the proclivity of citizens to endorse false political information. The experiment utilized a probability-based, representative sample of Americans via the National Opinion Research Center's AmeriSpeak Panel. Participants reported their partisanship prior to the experiment. Researchers presented the following questions in a random order:
+  
+  + Ohio[^state-choice] item: Did [Party] legislators in Ohio accept laundered money from a group of Canadian Steel
+manufacturers, hoping to improve their business dealings in the state? 
+  + Wisconsin[^state-choice] item: Did Lucas Hofmann, a [Party] prosecutor in Wisconsin, plot with [same party] Party
+members to suppress evidence that Gerry Mason, a wealthy donor in the state, engaged in pedophilia?
+  + Oil item: Was the price of crude oil higher on March 1, 2016 than on October 1, 2016? 
+  
+Researchers gave respondents five response options, scaled from $0 = \text{definitely did not occur}$ to $1 = \text{definitely occurred}$. The Oil item served as a baseline to assess individuals' proclivity to agree with an apolitical survey item. Researchers randomly assigned a political party for the Ohio item and used the opposite political party in the Wisconsin item. To track if a rumor is consistent with the respondent's party identification, researchers crafted a *Consistency* variable to indicate if the rumor is consistent with the participant's party identification.
+
+Using the results of this experiment, the study authors examined the relationship between rumor endorsement and a respondent's partisanship, rumor consistency, and the interaction between the two variables using a simple OLS regression. This interaction term examines the crux of the research question: is either party more responsive to consistency pressures?
+
+## Conclusion
+
+Ultimately, the researchers did not find evidence that citizens of either party exhibit a greater tendency to endorse false political information. This runs contrary to previous work in the field [source] and supports the conclusion that partisan asymmetries in conspiracy theories largely owe themselves to a greater *supply* of false information rather than a greater *demand*.
+
+# Replication
+
+## Main Analysis
+
+Before testing the actual research question, I replicated the previously described *Oil item* to assess individuals' tendency to agree or disagree with an apolitical survey item. This simple regression maps the agreement with the Oil question from party identification rescaled from 0 to 1, where Strong Democrat = 0 and Strong Republican = 1. The Party ID coefficient is near zero and is not significant, indicating that party has no bearing on one's proclivity to agree with the statement about oil prices.
+
+```{r party_oil, results="asis"}
+
+# creating the simple regression
+
+oil_mod <- working_wide %>% 
+  lm(oil ~ pidr, data = .)
+
+# outputting the table in a nice format, replicating the format of the original
+# author
+
+stargazer(oil_mod,
+          type = "latex", table.placement = "H", header = FALSE,
+          omit.stat = c("f", "LL", "ser"),
+          omit.table.layout = "n",
+          title = "Preliminary Table: Both Parties Agree to Apolitical Statement at the Same Rate",
+          covariate.labels = c("Party Identification", "Intercept"))
+
+```
+
+After confirming that neither party has a greater tendency to accept apolitical information at the baseline, I replicated the OLS regression examining the relationship between rumor endorsement and a respondent's partisanship. For thoroughness, the original researchers included several analyses. In its simplest form, researchers examined the Ohio and Wisconsin rumor separately. They also reported models including and excluding independents from partisan calculations, treating them as genuine partisans based on the party they lean toward in the analyses that include independents. I successfully replicated all regressions included in the main study.
+
+```{r table_1, results = "asis"}
+
+# replicating linear model, following method of the do file provided in
+# replication data
+  
+mod1 <- working_long %>% 
+  filter(independent == 0,
+         issue2 == 1) %>% 
+  lm(rum ~ consis * rep_i, data = .) 
+
+mod2 <- working_long %>% 
+  filter(nonlean == 1,
+         issue2 == 1) %>% 
+  lm(rum ~ consis * rep_i, data = .) 
+
+mod3 <- working_long %>% 
+  filter(independent == 0,
+         issue2 == 2) %>% 
+  lm(rum ~ consis * rep_i, data = .) 
+
+mod4 <- working_long %>% 
+  filter(nonlean == 1,
+         issue2 == 2) %>% 
+  lm(rum ~ consis * rep_i, data = .) 
+
+mod5 <- working_long %>% 
+  filter(independent == 0) %>% 
+  lm(rum ~ consis * rep_i + as_factor(issue2), data = .) 
+
+mod6 <- working_long %>% 
+  filter(nonlean == 1) %>% 
+  lm(rum ~ consis * rep_i + as_factor(issue2), data = .) 
+
+# printing out in a table formatted like the original piece
+
+stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
+          covariate.labels = c("Party-Consistent = 1", 
+                          "Republican = 1", 
+                          "Consistent * Republican",
+                          "Wisconsin = 1",
+                          "Intercept"),
+          column.labels = c("Ohio", "Ohio", "Wisconsin", "Wisconsin",
+                        "Pooled", "Pooled"),
+          dep.var.labels = "Belief in false political rumor",
+          title = "Table 1: Democrats and Republicans are Equally Subject to Consistency Pressures",
+          type = "latex", table.placement = "H", header = FALSE,
+          omit.stat = c("f", "LL", "ser"),
+          omit.table.layout = "n",
+          add.lines = list(c("Partisan Leaners", rep(c("Included", "Excluded"), 3))))
+
+```
+
+## Supplemental Information
+
+Because the replication of the models included in the main study went rather seamlessly on my end, I elected to replicate several tables from the Supplemental Information (SI) portion of the study. Many of these secondary results document and detail a pre-registered replication study, referred to as Study 2. 
+
+First, I replicated Table SI-2. This regression mirrors Table 1 but includes an additional interaction term to see if the Republican and Consistent interaction differs between the Dynata and Positly portions of Study 2. Dynata and Positly are the two firms that conducted the survey on behalf of the researchers. The main analysis pooled survey responses, and this regressions aims to see if the relationship between Republican and party consistency varied among respondents from the two different surveys.
+
+```{r table_si2, results = "asis"}
+
+# continuing to work through do file
+
+{
+  mod1 <- study2_long %>% 
+  filter(independent == 0,
+         issue == "_ohio") %>% 
+    lm(rum ~ consis * rep_i + positly, data = .)
+  
+  mod2 <- study2_long %>% 
+    filter(nonlean == 1,
+           issue == "_ohio") %>% 
+    lm(rum ~ consis * rep_i + positly, data = .)
+}
+
+{
+  mod3 <- study2_long %>% 
+    filter(independent == 0,
+           issue == "_wisc") %>% 
+    lm(rum ~ consis * rep_i + positly, data = .)
+  
+  mod4 <- study2_long %>% 
+    filter(nonlean == 1,
+           issue == "_wisc") %>% 
+    lm(rum ~ consis * rep_i + positly, data = .)
+}
+
+{
+  mod5 <- study2_long %>% 
+    filter(independent == 0,
+           issue %in% c("_wisc", "_ohio")) %>% 
+    lm(rum ~ consis * rep_i + wisconsin + positly, data = .)
+  
+  # do margins
+  
+  mod6 <- study2_long %>% 
+    filter(nonlean == 1,
+           issue %in% c("_wisc", "_ohio")) %>% 
+    lm(rum ~ consis * rep_i + wisconsin + positly, data = .)
+}
+
+# getting output table, modifying code for other table
+
+stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
+          covariate.labels = c("Party-Consistent = 1",
+                          "Republican = 1",
+                          "Wisconsin = 1",
+                          "Positly = 1",
+                          "Consistent * Republican",
+                          "Intercept"),
+          column.labels = c("Ohio", "Ohio", "Wisconsin", "Wisconsin",
+                        "Pooled", "Pooled"),
+          dep.var.labels = "Belief in false political rumor",
+          title = "Table SI-2: Results from Replication Study",
+          digits = 3, type = "latex", table.placement = "H", header = FALSE, 
+          omit.stat = c("f", "LL", "ser"),
+          omit.table.layout = "n")
+
+```
+
+
+Next, Table SI-3 replaces party with ideology and assesses whether respondent ideology moderates treatment effects. Rather than using party as in the main analysis, this regression used a conservative indicator, constructed from the 7-point ideology score. Because nearly half of respondents reported their ideology as "middle of the road," this analysis draws from a much smaller sample size.
+
+```{r table_si3, results = "asis"}
+
+mod1 <- working_long %>% 
+  filter(ideology2 != 4,
+         issue2 == 1) %>% 
+  lm(rum ~ iconsis * cons_i, data = .)
+
+mod2 <- working_long %>% 
+  filter(ideology2 != 4,
+         issue2 == 2) %>% 
+  lm(rum ~ iconsis * cons_i, data = .)
+
+mod3 <- working_long %>% 
+  filter(ideology2 != 4) %>% 
+  lm(rum ~ iconsis * cons_i + issue2, data = .)
+
+# displaying in a nice regression table
+
+stargazer(mod1, mod2, mod3,
+          covariate.labels = c("Ideology-consistent = 1",
+                               "Conservative = 1",
+                               "Wisconsin = 1", 
+                               "Consistent * Conservative",
+                               "Intercept"),
+          column.labels = c("Ohio", "Wisconsin", "Pooled"),
+          dep.var.labels = "Belief in false political rumor",
+          title = "Table SI-3: Ideology Does not Moderate Consistency Effects",
+          digits = 3, type = "latex", table.placement = "H", header = FALSE,
+          omit.stat = c("f", "LL", "ser"),
+          omit.table.layout = "n")
+
+```
+
+
+Table SI-4 combines the approaches of Table SI-2 and Table SI-3 by using Study 2 data and ideology. This regression yields very similar results to Table SI-2 in that there is no clear asymmetry for the Ohio item and liberals are slightly more susceptible to consistency pressures for the Wisconsin item.
+
+```{r table_si4, results = "asis"}
+
+# creating these variations of the model, separating OH & WI then pooling together
+
+mod1 <- study2_long %>% 
+  filter(ideology2 != 4,
+         issue == "_ohio") %>% 
+  lm(rum ~ iconsis * cons_i, data = .)
+
+mod2 <- study2_long %>% 
+  filter(ideology2 != 4,
+         issue == "_wisc") %>% 
+  lm(rum ~ iconsis * cons_i, data = .)
+
+mod3 <- study2_long %>% 
+  filter(ideology2 != 4,
+         issue %in% c("_wisc", "_ohio")) %>% 
+  lm(rum ~ iconsis * cons_i + issue, data = .)
+
+stargazer(mod1, mod2, mod3,
+          covariate.labels = c("Ideology-consistent = 1",
+                               "Conservative = 1",
+                               "Wisconsin = 1",  
+                               "Consistent * Conservative",
+                               "Intercept"),
+          column.labels = c("Ohio", "Wisconsin", "Pooled"),
+          dep.var.labels = "Belief in false political rumor",
+          title = "Table SI-4: Ideology and Consistency in Study 2",
+          digits = 3, type = "latex", 
+          table.placement = "H", 
+          header = FALSE,
+          omit.stat = c("f", "LL", "ser"),
+          omit.table.layout = "n")
+
+```
+
+# Proposed Extension
+
+The replications of the Supplemental Information analyses cover many of the possible extensions with the given data, such as examining ideology rather than party or examining the differences between the two survey firms. 
+
+This paper focused on the partisan differences in proclivity to believe false information. An interesting extension to this would examine the tendency of other demographics to endorse false political information. Does the relationship change with age? Gender? Race? These findings would have implications for how false rumors spread among other subsets of the population. Perhaps there is an asymmetry in one of these subgroups, but the distribution of the groups between the two parties yielded null findings in this analysis. Because I am limited by the variables included in the replication data, I will add a religion term to the analyses included in Table 1 to see if any religious groups exhibited a greater proclivity to accept false information.
+
+```{r table1_relig, results = "asis"}
+
+# testing for religion... religion alone is not significant, but controlling for
+# religion in the above analysis yields a significant coefficient for Republican
+
+mod1 <- working_long %>% 
+  filter(independent == 0,
+         issue2 == 1) %>% 
+  lm(rum ~ consis * rep_i + as_factor(relig), data = .) 
+
+mod2 <- working_long %>% 
+  filter(nonlean == 1,
+         issue2 == 1) %>% 
+  lm(rum ~ consis * rep_i + as_factor(relig), data = .) 
+
+mod3 <- working_long %>% 
+  filter(independent == 0,
+         issue2 == 2) %>% 
+  lm(rum ~ consis * rep_i + as_factor(relig), data = .) 
+
+mod4 <- working_long %>% 
+  filter(nonlean == 1,
+         issue2 == 2) %>% 
+  lm(rum ~ consis * rep_i + as_factor(relig), data = .) 
+
+mod5 <- working_long %>% 
+  filter(independent == 0) %>% 
+  lm(rum ~ consis * rep_i + as_factor(issue2) + as_factor(relig), data = .) 
+
+mod6 <- working_long %>% 
+  filter(nonlean == 1) %>% 
+  lm(rum ~ consis * rep_i + as_factor(issue2) + as_factor(relig), data = .) 
+
+# using same code as for Table 1 but including a religion label as well
+
+stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
+          covariate.labels = c("Party-Consistent = 1",
+                          "Republican = 1",
+                          "Wisconsin = 1",
+                          "Roman Catholic",
+                          "Mormon",
+                          "Orthodox",
+                          "Jewish",
+                          "Muslim",
+                          "Buddhist",
+                          "Hindu",
+                          "Atheist",
+                          "Agnostic",
+                          "Nothing in Particular",
+                          "Just Christian",
+                          "Unitarian",
+                          "Other",
+                          "Skipped religion question",
+                          "Consistent * Republican",
+                          "Intercept"),
+          column.labels = c("Ohio", "Ohio", "Wisconsin", "Wisconsin",
+                        "Pooled", "Pooled"),
+          dep.var.labels = "Belief in false political rumor",
+          title = "Table 1 with Religious Controls: Some Religious Groups Are More Likely to Accept False Information",
+          type = "latex", table.placement = "H", header = FALSE,
+          omit.stat = c("f", "LL", "ser"),
+          notes = "Protestant serves as the baseline religion category in this regression",
+          no.space = TRUE,
+          add.lines = list(c("Partisan Leaners", rep(c("Included", "Excluded"), 3))))
+
+```
+
+
+The results vary between religious groups. We see that, when controlling for the specific rumor, party identification, and party consistency, Atheists are less likely than Protestants to accept any of the rumors. In some of the regressions, Buddhists, Muslims, and individuals in the non-specific Christian category exhibited a greater tendency than Protestants to believe the false rumors, while Unitarians and Agnostics exhibited a lower tendency to accept the false information relative to Protestants. And, supporting the conclusion of the original study, neither party exhibits a greater tendency to endorse false information, even when controlling for religion.
+
+Given the role of social media platforms in 2016 election interference and the proliferation of 2020 election fraud conspiracy theories, I would like to extend this study to not only assess the proclivity to believe and agree with false information, but to also examine whether one party or another is more likely to share this false information with others. That is, rather than simply accepting something as truth, are either Democrats or Republicans more likely to spread this information to other people through an online medium? Unfortunately, that data does not exist, so this extension would require an additional experiment.
+
+The original analysis did not include any visuals beyond the regression tables. Graphs tell a clear story that is sometimes buried inside of regression tables, and they aid in the ease of reading for less-focused readers. For that reason, I created the below plot to visualize the relationship or lack thereof between partisanship and propensity to believe false rumors:
+
+```{r plot_table_1}
+
+# not part of the actual study, but thought it would be good to visualize
+
+working_long %>% 
+  mutate(consis = as_factor(consis),
+         consis = recode(consis,
+                         "0" = "Inconsistent with Party ID",
+                         "1" = "Consistent with Party ID")) %>% 
+  drop_na(consis, rep_i) %>% 
+  ggplot(aes(rep_i, rum)) +
+  geom_jitter(alpha = 0.5) +
+  geom_smooth(method = "lm", color = "red") +
+  theme_minimal() +
+  labs(x = "",
+       y = "Belief in rumor",
+       title = "Neither party exhibited a significantly greater proclivity to believe \nor reject false rumors in the face of consistency pressures",
+       color = "Consistency") +
+  scale_x_continuous(breaks = c(0, 1),
+                     labels = c("Democrat", "Republican")) +
+  scale_y_continuous(breaks = seq(0, 1, by = 0.25),
+                     labels = c("Definitely did not occur", 
+                                "Probably did not occur",
+                                "Might have occurred",
+                                "Probably occurred",
+                                "Definitely occurred")) +
+  facet_wrap(~consis) 
+
+```
+
+Similarly, the following plot shows little to no difference in the results from the two firms that conducted the surveys in Study 2:
+
+```{r plot_study2}
+
+study2_long %>% 
+    filter(nonlean == 1,
+           issue %in% c("_wisc", "_ohio")) %>% 
+  mutate(positly = recode(positly,
+                          "0" = "Dynata",
+                          "1" = "Positly"),
+         rep_i = as.numeric(as.character(rep_i))) %>% 
+  ggplot(aes(rep_i, rum)) +
+  geom_jitter(alpha = 0.5) +
+  facet_wrap(~positly, nrow = 2) +
+  geom_smooth(method = "lm", color = "red") +
+  scale_x_continuous(breaks = c(0, 1),
+                     labels = c("Democrat", "Republican")) +
+  scale_y_continuous(breaks = seq(0, 1, by = 0.25),
+                     labels = c("Definitely did not occur", 
+                                "Probably did not occur",
+                                "Might have occurred",
+                                "Probably occurred",
+                                "Definitely occurred")) +
+  labs(x = "",
+       y = "Belief in rumor",
+       title = "Republicans are slightly less likely than Democrats to endorse \na rumor in the Positly data") +
+  theme_minimal()
+
+
+```
+
+- May also discuss some proposed extensions involving more data collection, development of a new method, a potential follow-up study, etc.
+
+
+\newpage
+
+# Appendix
+
+## A note on p-values and the marking of significant coefficients
+
+The regression tables in the main text of this analysis are nearly exact matches to the original study in terms of formatting. However, Professor Gill has quite the distaste for regression tables that denote coefficients with p-values below a certain level with stars. The difference between a p-value of $0.04999$ and $0.05001$ is rather arbitrary, and it does seem silly that one would warrant rejecting the null hypothesis while the other would not. I opted to include the regression stars in the tables in the main text to (a) match the formatting by the original author, and (b) serve as a visual guide for which coefficients are significant and which are not. While the difference between $0.04999$ and $0.05001$ is likely negligible, the difference between $0.04999$ and $0.5$ is not, and the stars serve as a quick visual guide to draw attention to coefficients that may be noteworthy. To distinguish between the first two pairs, however, it is helpful to see the full p-values. For that reason, I will include this reiteration of Table 1, which is the only non-Supplemental Information table in the analysis, that has p-values in lieu of stars:
+
+```{r app_table1, results="asis"}
+
+# replicating linear model, following method of the do file provided in
+# replication data
+  
+mod1 <- working_long %>% 
+  filter(independent == 0,
+         issue2 == 1) %>% 
+  lm(rum ~ consis * rep_i, data = .) 
+
+mod2 <- working_long %>% 
+  filter(nonlean == 1,
+         issue2 == 1) %>% 
+  lm(rum ~ consis * rep_i, data = .) 
+
+mod3 <- working_long %>% 
+  filter(independent == 0,
+         issue2 == 2) %>% 
+  lm(rum ~ consis * rep_i, data = .) 
+
+mod4 <- working_long %>% 
+  filter(nonlean == 1,
+         issue2 == 2) %>% 
+  lm(rum ~ consis * rep_i, data = .) 
+
+mod5 <- working_long %>% 
+  filter(independent == 0) %>% 
+  lm(rum ~ consis * rep_i + as_factor(issue2), data = .) 
+
+mod6 <- working_long %>% 
+  filter(nonlean == 1) %>% 
+  lm(rum ~ consis * rep_i + as_factor(issue2), data = .) 
+
+# tweaking code from Table 1 section to remove stars and include p-values rather
+# than standard errors
+
+stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
+          covariate.labels = c("Party-Consistent = 1", 
+                          "Republican = 1", 
+                          "Consistent * Republican",
+                          "Wisconsin = 1",
+                          "Intercept"),
+          column.labels = c("Ohio", "Ohio", "Wisconsin", "Wisconsin",
+                        "Pooled", "Pooled"),
+          dep.var.labels = "Belief in false political rumor",
+          title = "Table 1: Democrats and Republicans are Equally Subject to Consistency Pressures",
+          type = "latex", table.placement = "H", header = FALSE,
+          omit.stat = c("f", "LL", "ser"),
+          report=("vc*p"),
+          star.cutoffs = NA,
+          omit.table.layout = "n",
+          add.lines = list(c("Partisan Leaners", rep(c("Included", "Excluded"), 3))))
+
+```
+
+
+-------------------------------------------------------------------------------------
+
+[^state-choice]: Researchers specifically chose the swing states of Ohio and Wisconsin as the states of focus since politicians from either state could plausibly be either Republican or Democrat. 
 

@@ -1,7 +1,7 @@
 ---
 title: Getting my bearings
 output:
-  html_document:
+  pdf_document:
     df_print: kable
 ---
 
@@ -18,6 +18,8 @@ knitr::opts_chunk$set(
   library(haven)
   library(margins)
   library(sjlabelled)
+  library(sjPlot)
+  library(stargazer)
 }
 
 
@@ -70,7 +72,7 @@ mod6 <- working_long %>%
   filter(nonlean == 1) %>% 
   lm(rum ~ consis * rep_i + as_factor(issue2), data = .) 
 
-tab_model(mod1, mod2, mod3, mod4, mod5, mod6,
+stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
           show.ci = FALSE,
           show.se = TRUE,
           p.style = "stars",
@@ -100,7 +102,7 @@ working_long %>%
   theme_classic() +
   labs(x = "Republican?",
        y = "Belief in rumor",
-       title = "Neither party exhibited greater proclivity to believe rumor") +
+       title = "Neither party exhibited greater proclivity to believe false rumors") +
   scale_x_continuous(breaks = c(0, 1),
                      labels = c(0, 1)) +
   scale_y_continuous(breaks = seq(0, 1, by = 0.25),
@@ -113,6 +115,7 @@ working_long %>%
                                 "Consistent with party"),
                      values = c("lightblue", "navyblue"))
 
+ggsave("replication_figures/table1_plot.jpeg")
 ```
 
 
@@ -145,53 +148,68 @@ study2_long %>%
 # continuing to work through do file
 
 {
-  mod_1 <- study2_long %>% 
+  mod1 <- study2_long %>% 
   filter(independent == 0,
-         issue == "_ohio") 
+         issue == "_ohio") %>% 
+    lm(rum ~ consis * rep_i + positly, data = .)
   
-  mod_1 <- lm(rum ~ consis * rep_i + positly, data = mod_1)
-  mod_1
-  
-  # marginal effect mentioned in footnote... need to figure out how to make this work
-  
-  # margins(mod_1, at = list(consis = study2_long$rep_i), variables = "consis")
-  
-  study2_long %>% 
+  mod2 <- study2_long %>% 
     filter(nonlean == 1,
            issue == "_ohio") %>% 
     lm(rum ~ consis * rep_i + positly, data = .)
 }
 
 {
-  study2_long %>% 
+  mod3 <- study2_long %>% 
     filter(independent == 0,
            issue == "_wisc") %>% 
     lm(rum ~ consis * rep_i + positly, data = .)
   
-  # do margins
-  
-  study2_long %>% 
+  mod4 <- study2_long %>% 
     filter(nonlean == 1,
            issue == "_wisc") %>% 
     lm(rum ~ consis * rep_i + positly, data = .)
 }
 
 {
-  study2_long %>% 
+  mod5 <- study2_long %>% 
     filter(independent == 0,
            issue %in% c("_wisc", "_ohio")) %>% 
     lm(rum ~ consis * rep_i + positly, data = .)
   
   # do margins
   
-  study2_long %>% 
+  mod6 <- study2_long %>% 
     filter(nonlean == 1,
            issue %in% c("_wisc", "_ohio")) %>% 
     lm(rum ~ consis * rep_i + positly, data = .)
 }
 
+# getting output table, modifying code for other table
+
+####################################################
+########## THIS DOES NOT MATCH UP ##################
+# are her values truncated?
+####################################################
+
+stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
+          show.ci = FALSE,
+          show.se = TRUE,
+          p.style = "stars",
+          collapse.se = TRUE,
+          pred.labels = c("Intercept",
+                          "Party-Consistent = 1",
+                          "Republican = 1",
+                          "Positly = 1",
+                          "Consistent * Republican"),
+          dv.labels = c("Ohio", "Ohio", "Wisconsin", "Wisconsin",
+                        "Pooled", "Pooled"),
+          title = "Table SI-2: Results from Replication Study",
+          digits = 3)
+
 
 ```
+
 ```{r si_section_6}
 
 # SI section 6, text-based claims
@@ -212,41 +230,67 @@ study2_long %>%
   lm(rum ~ consis * rep_i + issue2 + acq_comb, data = .)
 
 ```
+
 ```{r table_si3}
 
-working_long %>% 
+mod1 <- working_long %>% 
   filter(ideology2 != 4,
          issue2 == 1) %>% 
   lm(rum ~ iconsis * cons_i, data = .)
 
-working_long %>% 
+mod2 <- working_long %>% 
   filter(ideology2 != 4,
          issue2 == 2) %>% 
   lm(rum ~ iconsis * cons_i, data = .)
 
-working_long %>% 
+mod3 <- working_long %>% 
   filter(ideology2 != 4) %>% 
   lm(rum ~ iconsis * cons_i + issue2, data = .)
+
+# displaying in a nice regression table
+
+stargazer(mod1, mod2, mod3,
+          show.ci = FALSE,
+          show.se = TRUE,
+          collapse.se = TRUE,
+          p.style = "stars",
+          pred.labels = c("Intercept", "Ideology-consistent = 1",
+                          "Conservative = 1", "Consistent * Conservative",
+                          "Wisconsin = 1"),
+          dv.labels = c("Ohio", "Wisconsin", "Pooled"),
+          title = "Table SI-3: Ideology Does not Moderate Consistency Effects",
+          digits = 3)
 
 ```
 
 ```{r table_si4}
 
-study2_long %>% 
+mod1 <- study2_long %>% 
   filter(ideology2 != 4,
          issue == "_ohio") %>% 
   lm(rum ~ iconsis * cons_i, data = .)
 
-study2_long %>% 
+mod2 <- study2_long %>% 
   filter(ideology2 != 4,
          issue == "_wisc") %>% 
   lm(rum ~ iconsis * cons_i, data = .)
 
-study2_long %>% 
+mod3 <- study2_long %>% 
   filter(ideology2 != 4,
          issue %in% c("_wisc", "_ohio")) %>% 
-  lm(rum ~ iconsis * cons_i, data = .)
+  lm(rum ~ iconsis * cons_i + issue, data = .)
 
+stargazer(mod1, mod2, mod3,
+          show.ci = FALSE,
+          show.se = TRUE,
+          collapse.se = TRUE,
+          p.style = "stars",
+          pred.labels = c("Intercept", "Ideology-consistent = 1",
+                          "Conservative = 1", "Consistent * Conservative",
+                          "Wisconsin = 1"),
+          dv.labels = c("Ohio", "Wisconsin", "Pooled"),
+          title = "Table SI-4: Ideology and Consistency in Study 2",
+          digits = 3)
 
 ```
 
