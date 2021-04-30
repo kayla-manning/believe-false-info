@@ -1,7 +1,7 @@
 ---
 title: Replication Report
 author: Kayla Manning
-date: May 5, 2021
+date: May 7, 2021
 output: pdf_document
 fig.caption: yes
 keep_text: yes
@@ -11,6 +11,10 @@ header-includes:
 ---
 
 # **CROSS-REFERENCE WITH CHECKLIST ON CANVAS**
+
+- parenthetical citation of the original article?
+- interpret the results displayed in the tables
+- update README
 
 ```{r setup, include=FALSE}
 
@@ -24,11 +28,7 @@ knitr::opts_chunk$set(
 
 {
   library(tidyverse)
-  library(broom)
   library(haven)
-  library(margins)
-  library(sjlabelled)
-  library(sjPlot)
   library(stargazer)
 }
 
@@ -40,7 +40,7 @@ knitr::opts_chunk$set(
       mutate(consis = as_factor(consis),
              rep_i = as_factor(rep_i),
              positly = as_factor(positly),
-             isuse = as_factor(issue))
+             issue = as_factor(issue))
   working_wide <- read_dta("replication_data/working_wide.dta")
 }
 
@@ -53,11 +53,11 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-With the prevalence of claims of election fraud and Q-Anon conspiracy theories, it seems as if Republican voters exhibit a greater tendency to follow conspiracy theories. Does the prevalence of far-right conspiracy theories result from a greater supply of such rumors spread by political elite or a greater likelihood of believing false information? Previous research about the propensity to accept false information does not differentiate between supply-side and demand-side explanations. In the case of misinformation, *supply-side* explanations have to do with the effectiveness of political elites in spreading such information, and *demand-side* explanations involve the likelihood of citizens believing false information upon receipt. This study focuses on the demand side and examines if Republicans or Democrats believe false political information at different rates.
+With the prevalence of claims of election fraud and Q-Anon conspiracy theories, it seems as if Republican voters exhibit a greater tendency to follow conspiracy theories. Does the prevalence of far-right conspiracy theories result from a greater supply of such rumors spread by political elite or a greater likelihood of believing false information? Previous research about the propensity to accept false information does not differentiate between supply-side and demand-side explanations. In the case of misinformation, *supply-side* explanations have to do with the effectiveness of political elites in spreading such information, and *demand-side* explanations involve the likelihood of citizens believing false information upon receipt. This study focuses on the demand side and examines if Republicans or Democrats believe false political information at different rates (Ryan & Aziz, 2020).[^data-source]
 
 ## Methods
 
-The original researchers conducted a carefully designed experiment to reveal any asymmetries in the proclivity of citizens to endorse false political information. The experiment utilized a probability-based, representative sample of Americans via the National Opinion Research Center's AmeriSpeak Panel. Participants reported their partisanship prior to the experiment. Researchers presented the following questions in a random order:
+The original researchers conducted a carefully designed experiment to reveal any asymmetries in the proclivity of citizens to endorse false political information (Ryan & Aziz, 2020). The experiment utilized a probability-based, representative sample of Americans via the National Opinion Research Center's AmeriSpeak Panel. Participants reported their partisanship prior to the experiment. Researchers presented the following questions in a random order:
   
   + Ohio[^state-choice] item: Did [Party] legislators in Ohio accept laundered money from a group of Canadian Steel
 manufacturers, hoping to improve their business dealings in the state? 
@@ -219,7 +219,6 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
 
 ```
 
-
 Next, Table SI-3 replaces party with ideology and assesses whether respondent ideology moderates treatment effects. Rather than using party as in the main analysis, this regression used a conservative indicator, constructed from the 7-point ideology score. Because nearly half of respondents reported their ideology as "middle of the road," this analysis draws from a much smaller sample size.
 
 ```{r table_si3, results = "asis"}
@@ -294,11 +293,75 @@ stargazer(mod1, mod2, mod3,
 
 ```
 
-# Proposed Extension
+# Proposed Extensions
 
-The replications of the Supplemental Information analyses cover many of the possible extensions with the given data, such as examining ideology rather than party or examining the differences between the two survey firms. 
+## Visualizations
 
-This paper focused on the partisan differences in proclivity to believe false information. An interesting extension to this would examine the tendency of other demographics to endorse false political information. Does the relationship change with age? Gender? Race? These findings would have implications for how false rumors spread among other subsets of the population. Perhaps there is an asymmetry in one of these subgroups, but the distribution of the groups between the two parties yielded null findings in this analysis. Because I am limited by the variables included in the replication data, I will add a religion term to the analyses included in Table 1 to see if any religious groups exhibited a greater proclivity to accept false information.
+The replications of the Supplemental Information analyses cover many of the possible extensions with the given data, such as examining ideology rather than party or examining the differences between the two survey firms. However, the main analysis as well as the Supplemental Information lacked any sort of visualization aside from regression tables. Graphs tell a clear story that is sometimes buried inside of regression tables, and they aid in the ease of reading for less-focused readers. For that reason, I created the below plot to visualize the relationship or lack thereof between partisanship and propensity to believe false rumors:
+
+```{r plot_table_1}
+
+# not part of the actual study, but thought it would be good to visualize
+
+working_long %>% 
+  mutate(consis = as_factor(consis),
+         consis = recode(consis,
+                         "0" = "Inconsistent with Party ID",
+                         "1" = "Consistent with Party ID")) %>% 
+  drop_na(consis, rep_i) %>% 
+  ggplot(aes(rep_i, rum)) +
+  geom_jitter(alpha = 0.5) +
+  geom_smooth(method = "lm", color = "red") +
+  theme_minimal() +
+  labs(x = "",
+       y = "Belief in rumor",
+       title = "Neither party exhibited a significantly greater proclivity to \nbelieve or reject false rumors in the face of consistency \npressures",
+       color = "Consistency") +
+  scale_x_continuous(breaks = c(0, 1),
+                     labels = c("Democrat", "Republican")) +
+  scale_y_continuous(breaks = seq(0, 1, by = 0.25),
+                     labels = c("Definitely did not occur", 
+                                "Probably did not occur",
+                                "Might have occurred",
+                                "Probably occurred",
+                                "Definitely occurred")) +
+  facet_wrap(~consis) 
+
+```
+
+Similarly, the following plot shows little to no difference in the results from the two firms that conducted the surveys in Study 2:
+
+```{r plot_study2}
+
+study2_long %>% 
+    filter(nonlean == 1,
+           issue %in% c("_wisc", "_ohio")) %>% 
+  mutate(positly = recode(positly,
+                          "0" = "Dynata",
+                          "1" = "Positly"),
+         rep_i = as.numeric(as.character(rep_i))) %>% 
+  ggplot(aes(rep_i, rum)) +
+  geom_jitter(alpha = 0.5) +
+  facet_wrap(~positly, nrow = 2) +
+  geom_smooth(method = "lm", color = "red") +
+  scale_x_continuous(breaks = c(0, 1),
+                     labels = c("Democrat", "Republican")) +
+  scale_y_continuous(breaks = seq(0, 1, by = 0.25),
+                     labels = c("Definitely did not occur", 
+                                "Probably did not occur",
+                                "Might have occurred",
+                                "Probably occurred",
+                                "Definitely occurred")) +
+  labs(x = "",
+       y = "Belief in rumor",
+       title = "Republicans are slightly less likely than Democrats to \nendorse a rumor in the Positly data relative to Dynata") +
+  theme_minimal()
+
+```
+
+## Examining Religious Differences
+
+This paper focused on the partisan differences in proclivity to believe false information. An interesting extension to this would examine the asymmetries in the propensity of different religious groups to endorse false political information. Many religions have their foundations on stories that seem unlikely to occur in the modern world, and the metaphorical nature of religion requires that you accept things that you cannot see (Shapiro, 2017). To examine the relationship between religious subgroups and the propensity to accept false information, I will add a religion term to the analyses included of the original Table 1 to see if any religious groups exhibited a greater proclivity to accept false information.
 
 ```{r table1_relig, results = "asis"}
 
@@ -367,76 +430,30 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
 
 ```
 
+The results vary between religious groups. Protestants serve as the baseline category, and the other coefficients represent changes from that baseline. We see that, when controlling for the specific rumor, party identification, and party consistency, Atheists are less likely than Protestants to accept any of the rumors. In some of the regressions, Buddhists, Muslims, and individuals in the non-specific Christian category exhibited a greater tendency than Protestants to believe the false rumors, while Unitarians and Agnostics exhibited a lower tendency to accept the false information relative to Protestants. Generally, the categories that reject religion altogether or take a more liberal view--such as Atheist, Agnostic, or Unitarian--tend to exhibit a lower tendency than Protestants to accept this false information. This makes intuitive sense, since these religious categories require less imagination. And, supporting the conclusion of the original study, neither party exhibits a greater tendency to endorse false information, even when controlling for religion.
 
-The results vary between religious groups. We see that, when controlling for the specific rumor, party identification, and party consistency, Atheists are less likely than Protestants to accept any of the rumors. In some of the regressions, Buddhists, Muslims, and individuals in the non-specific Christian category exhibited a greater tendency than Protestants to believe the false rumors, while Unitarians and Agnostics exhibited a lower tendency to accept the false information relative to Protestants. And, supporting the conclusion of the original study, neither party exhibits a greater tendency to endorse false information, even when controlling for religion.
+## Extending to Examine Tendency to Share Rumors Online
 
-Given the role of social media platforms in 2016 election interference and the proliferation of 2020 election fraud conspiracy theories, I would like to extend this study to not only assess the proclivity to believe and agree with false information, but to also examine whether one party or another is more likely to share this false information with others. That is, rather than simply accepting something as truth, are either Democrats or Republicans more likely to spread this information to other people through an online medium? Unfortunately, that data does not exist, so this extension would require an additional experiment.
+The analysis at the focus of this replication focused on distinguishing whether the current environment of misinformation has to do with differences in supply or demand of such false news, and it ultimately concluded that the rise of far-right conspiracy theories has more to do with the supply rather than an increased demand from Republicans. However, the supply becomes skewed if Republicans who believe conspiracy theories are more likely to spread these theories than Democrats who believe false information. Given the role of social media platforms in 2016 election interference and the proliferation of 2020 election fraud conspiracy theories (Frenkel, 2020), I would like to extend this study to not only assess the proclivity to believe and agree with false information, but to also examine whether one party or another is more likely to share this false information with others. That is, rather than simply accepting something as truth, are either Democrats or Republicans more likely to spread this information to other people through an online medium? Unfortunately, that data does not exist, so this extension would require an additional experiment.
 
-The original analysis did not include any visuals beyond the regression tables. Graphs tell a clear story that is sometimes buried inside of regression tables, and they aid in the ease of reading for less-focused readers. For that reason, I created the below plot to visualize the relationship or lack thereof between partisanship and propensity to believe false rumors:
+Previous research has focused on differential effects of social media on the two parties, but they have not focused on the propensity to share false stories. An analysis of survey data found that social media echo chambers increase satisfaction with democracy among self-identified Republicans, but the same study found no effect among self-identified Democrats (Justwan et al., 2018). This paper gives reason to hypothesize that Republicans may be more sensitive to the effects of social media echo chambers. With that, one could reasonably hypothesize that even if Republicans may not accept false information at a rate greater than Democrats, those that do accept the information may be more likely to share it through a social media platform.
 
-```{r plot_table_1}
+# Conclusion
 
-# not part of the actual study, but thought it would be good to visualize
+Both the original study and this replication found no evidence that citizens of either party exhibit a greater tendency to endorse false political information. This runs contrary to previous work in the field [source] and supports the conclusion that partisan asymmetries in conspiracy theories largely owe themselves to a greater *supply* of false information rather than a greater *demand*. In extending the results of the analysis, however, a preliminary regression did find some asymmetries in the propensity of particular religious groups to accept false information. This, alongside a study examining the propensity of the different parties to share fake news through social media, warrants future investigation.
 
-working_long %>% 
-  mutate(consis = as_factor(consis),
-         consis = recode(consis,
-                         "0" = "Inconsistent with Party ID",
-                         "1" = "Consistent with Party ID")) %>% 
-  drop_na(consis, rep_i) %>% 
-  ggplot(aes(rep_i, rum)) +
-  geom_jitter(alpha = 0.5) +
-  geom_smooth(method = "lm", color = "red") +
-  theme_minimal() +
-  labs(x = "",
-       y = "Belief in rumor",
-       title = "Neither party exhibited a significantly greater proclivity to believe \nor reject false rumors in the face of consistency pressures",
-       color = "Consistency") +
-  scale_x_continuous(breaks = c(0, 1),
-                     labels = c("Democrat", "Republican")) +
-  scale_y_continuous(breaks = seq(0, 1, by = 0.25),
-                     labels = c("Definitely did not occur", 
-                                "Probably did not occur",
-                                "Might have occurred",
-                                "Probably occurred",
-                                "Definitely occurred")) +
-  facet_wrap(~consis) 
+\newpage
 
-```
+# References
 
-Similarly, the following plot shows little to no difference in the results from the two firms that conducted the surveys in Study 2:
+Hlavac, M. (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables. R package
+  version 5.2.1. https://CRAN.R-project.org/package=stargazer
 
-```{r plot_study2}
+Wickham, H. & Miller, E. (2020). haven: Import and Export 'SPSS', 'Stata' and 'SAS' Files. R
+  package version 2.3.1. https://CRAN.R-project.org/package=haven
 
-study2_long %>% 
-    filter(nonlean == 1,
-           issue %in% c("_wisc", "_ohio")) %>% 
-  mutate(positly = recode(positly,
-                          "0" = "Dynata",
-                          "1" = "Positly"),
-         rep_i = as.numeric(as.character(rep_i))) %>% 
-  ggplot(aes(rep_i, rum)) +
-  geom_jitter(alpha = 0.5) +
-  facet_wrap(~positly, nrow = 2) +
-  geom_smooth(method = "lm", color = "red") +
-  scale_x_continuous(breaks = c(0, 1),
-                     labels = c("Democrat", "Republican")) +
-  scale_y_continuous(breaks = seq(0, 1, by = 0.25),
-                     labels = c("Definitely did not occur", 
-                                "Probably did not occur",
-                                "Might have occurred",
-                                "Probably occurred",
-                                "Definitely occurred")) +
-  labs(x = "",
-       y = "Belief in rumor",
-       title = "Republicans are slightly less likely than Democrats to endorse \na rumor in the Positly data") +
-  theme_minimal()
-
-
-```
-
-- May also discuss some proposed extensions involving more data collection, development of a new method, a potential follow-up study, etc.
-
+Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Software, 4(43), 1686,
+  https://doi.org/10.21105/joss.01686
 
 \newpage
 
@@ -501,8 +518,9 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
 
 ```
 
-
 -------------------------------------------------------------------------------------
+
+[^data-source]:The Journal of Politics published the original study. The Harvard Dataverse has replication data and Stata code available at DOI 10.7910/DVN/9ERCTY.
 
 [^state-choice]: Researchers specifically chose the swing states of Ohio and Wisconsin as the states of focus since politicians from either state could plausibly be either Republican or Democrat. 
 
