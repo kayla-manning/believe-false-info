@@ -24,12 +24,18 @@ knitr::opts_chunk$set(
   warning = FALSE
 )
 
-# loading packages
+# installing packages if they are not already installed
 
 {
-  library(tidyverse)
-  library(haven)
-  library(stargazer)
+  my_packages <- c("tidyverse", "haven", "stargazer")
+  new_packages <- my_packages[!(my_packages %in% installed.packages()[,"Package"])]
+  if (length(new_packages)) install.packages(new_packages)
+}
+
+# loading all of the libraries in with this loop
+
+for (package in my_packages) {
+  eval(bquote(library(.(package))))
 }
 
 # getting all data read in up here to clean up the bottom of the file
