@@ -1,4 +1,4 @@
-# Replication Project: Is the Political Right More Credulous?: Experimental Evidence Against Asymmetric Motivations to Believe False Political Information
+# Replication Report: Is the Political Right More Credulous?: Experimental Evidence Against Asymmetric Motivations to Believe False Political Information
 
 #### Kayla Manning, Spring 2021
 
@@ -26,4 +26,4 @@ Ryan, T., & Aziz, A. (2020). Is the Political Right More Credulous?: Experimenta
 
 - R version: R version 4.0.3 (2020-10-10)
 - Platform: x86_64-apple-darwin17.0         
-- Packages: `tidyverse`, `haven`, `stargazer`
+- Packages: `tidyverse`, `haven`, `stargazer`, `extrafont`

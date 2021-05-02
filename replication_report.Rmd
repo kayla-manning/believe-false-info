@@ -1,5 +1,5 @@
 ---
-title: Replication Report
+title: "Replication Report: Is the Political Right More Credulous?: Experimental Evidence Against Asymmetric Motivations to Believe False Political Information"
 author: Kayla Manning
 date: May 7, 2021
 output: pdf_document
@@ -8,13 +8,8 @@ keep_text: yes
 header-includes:
   - \usepackage{float}
   - \usepackage[labelformat=empty]{caption}
+mainfont: Times New Roman
 ---
-
-# **CROSS-REFERENCE WITH CHECKLIST ON CANVAS**
-
-- parenthetical citation of the original article?
-- interpret the results displayed in the tables
-- update README
 
 ```{r setup, include=FALSE}
 
@@ -27,7 +22,7 @@ knitr::opts_chunk$set(
 # installing packages if they are not already installed
 
 {
-  my_packages <- c("tidyverse", "haven", "stargazer")
+  my_packages <- c("tidyverse", "haven", "stargazer", "extrafont")
   new_packages <- my_packages[!(my_packages %in% installed.packages()[,"Package"])]
   if (length(new_packages)) install.packages(new_packages)
 }
@@ -55,15 +50,25 @@ for (package in my_packages) {
 
 ```
 
-# Overview of original paper
+```{r notes}
+
+# **CROSS-REFERENCE WITH CHECKLIST ON CANVAS**
+
+# - parenthetical citation of the original article?
+# - interpret the results displayed in the tables
+# - can I leave the stars?
+
+```
+
+# Overview of the original paper
 
 ## Introduction
 
-With the prevalence of claims of election fraud and Q-Anon conspiracy theories, it seems as if Republican voters exhibit a greater tendency to follow conspiracy theories. Does the prevalence of far-right conspiracy theories result from a greater supply of such rumors spread by political elite or a greater likelihood of believing false information? Previous research about the propensity to accept false information does not differentiate between supply-side and demand-side explanations. In the case of misinformation, *supply-side* explanations have to do with the effectiveness of political elites in spreading such information, and *demand-side* explanations involve the likelihood of citizens believing false information upon receipt. This study focuses on the demand side and examines if Republicans or Democrats believe false political information at different rates (Ryan & Aziz, 2020).[^data-source]
+With the prevalence of claims of election fraud and Q-Anon conspiracy theories, it seems as if Republican voters exhibit a greater tendency to follow conspiracy theories. Does the prevalence of far-right conspiracy theories result from a greater supply of such rumors spread by the political elite or a greater likelihood of believing false information? Previous research about the propensity to accept false information does not differentiate between supply-side and demand-side explanations. In the case of misinformation, *supply-side* explanations have to do with the effectiveness of political elites in spreading such information, and *demand-side* explanations involve the likelihood of citizens believing false information upon receipt. This study focuses on the demand side and examines if Republicans or Democrats believe false political information at different rates (Ryan & Aziz, 2020).[^data-source]
 
 ## Methods
 
-The original researchers conducted a carefully designed experiment to reveal any asymmetries in the proclivity of citizens to endorse false political information (Ryan & Aziz, 2020). The experiment utilized a probability-based, representative sample of Americans via the National Opinion Research Center's AmeriSpeak Panel. Participants reported their partisanship prior to the experiment. Researchers presented the following questions in a random order:
+The original researchers conducted a carefully designed experiment to reveal any asymmetries in the proclivity of citizens to endorse false political information (Ryan & Aziz, 2020). The experiment utilized a probability-based, representative sample of Americans via the National Opinion Research Center's AmeriSpeak Panel. Participants reported their partisanship before the experiment. Researchers presented the following questions in a randomized order:
   
   + Ohio[^state-choice] item: Did [Party] legislators in Ohio accept laundered money from a group of Canadian Steel
 manufacturers, hoping to improve their business dealings in the state? 
@@ -83,7 +88,7 @@ Ultimately, the researchers did not find evidence that citizens of either party 
 
 ## Main Analysis
 
-Before testing the actual research question, I replicated the previously described *Oil item* to assess individuals' tendency to agree or disagree with an apolitical survey item. This simple regression maps the agreement with the Oil question from party identification rescaled from 0 to 1, where Strong Democrat = 0 and Strong Republican = 1. The Party ID coefficient is near zero and is not significant, indicating that party has no bearing on one's proclivity to agree with the statement about oil prices.
+Before testing the actual research question, I replicated the previously described *Oil item* to assess individuals' tendency to agree or disagree with an apolitical survey item. This simple regression maps the agreement with the Oil question from party identification rescaled from 0 to 1, where Strong Democrat = 0 and Strong Republican = 1. The near-zero and insignificant Party ID coefficient indicates that one's party has no bearing on his or her proclivity to agree with the statement about oil prices.
 
 ```{r party_oil, results="asis"}
 
@@ -98,7 +103,6 @@ oil_mod <- working_wide %>%
 stargazer(oil_mod,
           type = "latex", table.placement = "H", header = FALSE,
           omit.stat = c("f", "LL", "ser"),
-          omit.table.layout = "n",
           title = "Preliminary Table: Both Parties Agree to Apolitical Statement at the Same Rate",
           covariate.labels = c("Party Identification", "Intercept"))
 
@@ -153,7 +157,6 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
           title = "Table 1: Democrats and Republicans are Equally Subject to Consistency Pressures",
           type = "latex", table.placement = "H", header = FALSE,
           omit.stat = c("f", "LL", "ser"),
-          omit.table.layout = "n",
           add.lines = list(c("Partisan Leaners", rep(c("Included", "Excluded"), 3))))
 
 ```
@@ -162,7 +165,9 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
 
 Because the replication of the models included in the main study went rather seamlessly on my end, I elected to replicate several tables from the Supplemental Information (SI) portion of the study. Many of these secondary results document and detail a pre-registered replication study, referred to as Study 2. 
 
-First, I replicated Table SI-2. This regression mirrors Table 1 but includes an additional interaction term to see if the Republican and Consistent interaction differs between the Dynata and Positly portions of Study 2. Dynata and Positly are the two firms that conducted the survey on behalf of the researchers. The main analysis pooled survey responses, and this regressions aims to see if the relationship between Republican and party consistency varied among respondents from the two different surveys.
+First, I replicated Table SI-2. This regression mirrors Table 1 but includes an additional interaction term to see if the Republican and Consistent interaction differs between the Dynata and Positly portions of Study 2. The researchers tasked two market research firms, Dynata and Positly, to recruit and survey respondents on their behalf. The main analysis pooled survey responses, and this regression aims to see if the relationship between Republican and party consistency varied among respondents from the two different surveys.
+
+Unsurprisingly, the top row demonstrates a consistently positive effect of a party-consistent rumor among Democrats, exhibiting that Democrats exhibit consistency pressures to all rumors. The negative interaction terms demonstrate that Republicans exhibit differential responses to consistency pressures, and, if anything, Democrats are more susceptible to consistency pressures in this test. The original authors reconcile this discrepancy from the main text by hypothesizing that the out-party is more prone to believe false political information that favors their side. The initial study took place only one year into Trump's presidency. Study 2, however, took place in July 2019, which meant Democrats had spent almost two years away from the presidency. Regardless of the underlying mechanism, the researchers set out to answer whether or not the political right exhibited a greater propensity to believe false political information, and both the original study and Study 2 answer indicate the phenomenon is not unique to the political right.
 
 ```{r table_si2, results = "asis"}
 
@@ -220,12 +225,11 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
           dep.var.labels = "Belief in false political rumor",
           title = "Table SI-2: Results from Replication Study",
           digits = 3, type = "latex", table.placement = "H", header = FALSE, 
-          omit.stat = c("f", "LL", "ser"),
-          omit.table.layout = "n")
+          omit.stat = c("f", "LL", "ser"))
 
 ```
 
-Next, Table SI-3 replaces party with ideology and assesses whether respondent ideology moderates treatment effects. Rather than using party as in the main analysis, this regression used a conservative indicator, constructed from the 7-point ideology score. Because nearly half of respondents reported their ideology as "middle of the road," this analysis draws from a much smaller sample size.
+Next, Table SI-3 replaces the party identification variable from the main analysis with a conservative indicator constructed from the 7-point ideology score. Because nearly half of respondents reported their ideology as "middle of the road," this analysis draws from a much smaller sample size. The interaction term does not provide support for any asymmetry in credulity by respondent ideology.
 
 ```{r table_si3, results = "asis"}
 
@@ -255,11 +259,9 @@ stargazer(mod1, mod2, mod3,
           dep.var.labels = "Belief in false political rumor",
           title = "Table SI-3: Ideology Does not Moderate Consistency Effects",
           digits = 3, type = "latex", table.placement = "H", header = FALSE,
-          omit.stat = c("f", "LL", "ser"),
-          omit.table.layout = "n")
+          omit.stat = c("f", "LL", "ser"))
 
 ```
-
 
 Table SI-4 combines the approaches of Table SI-2 and Table SI-3 by using Study 2 data and ideology. This regression yields very similar results to Table SI-2 in that there is no clear asymmetry for the Ohio item and liberals are slightly more susceptible to consistency pressures for the Wisconsin item.
 
@@ -294,8 +296,7 @@ stargazer(mod1, mod2, mod3,
           digits = 3, type = "latex", 
           table.placement = "H", 
           header = FALSE,
-          omit.stat = c("f", "LL", "ser"),
-          omit.table.layout = "n")
+          omit.stat = c("f", "LL", "ser"))
 
 ```
 
@@ -303,9 +304,9 @@ stargazer(mod1, mod2, mod3,
 
 ## Visualizations
 
-The replications of the Supplemental Information analyses cover many of the possible extensions with the given data, such as examining ideology rather than party or examining the differences between the two survey firms. However, the main analysis as well as the Supplemental Information lacked any sort of visualization aside from regression tables. Graphs tell a clear story that is sometimes buried inside of regression tables, and they aid in the ease of reading for less-focused readers. For that reason, I created the below plot to visualize the relationship or lack thereof between partisanship and propensity to believe false rumors:
+The replications of the Supplemental Information analyses cover many of the possible extensions with the given data, such as examining ideology rather than party or examining the differences between the two survey firms. However, both the main analysis and the Supplemental Information lacked any sort of visualization aside from regression tables. Graphs tell a clear story that is sometimes buried inside of regression tables, and they aid in the ease of reading for less-focused readers. For that reason, I created the below plot to visualize the relationship or lack thereof between partisanship and propensity to believe false rumors:
 
-```{r plot_table_1}
+```{r plot_table_1, fig.height=3, fig.width=7}
 
 # not part of the actual study, but thought it would be good to visualize
 
@@ -331,13 +332,14 @@ working_long %>%
                                 "Might have occurred",
                                 "Probably occurred",
                                 "Definitely occurred")) +
-  facet_wrap(~consis) 
+  facet_wrap(~consis) +
+  theme(text = element_text(family = "Times New Roman"))
 
 ```
 
 Similarly, the following plot shows little to no difference in the results from the two firms that conducted the surveys in Study 2:
 
-```{r plot_study2}
+```{r plot_study2, fig.height=3, fig.width=7}
 
 study2_long %>% 
     filter(nonlean == 1,
@@ -361,13 +363,14 @@ study2_long %>%
   labs(x = "",
        y = "Belief in rumor",
        title = "Republicans are slightly less likely than Democrats to \nendorse a rumor in the Positly data relative to Dynata") +
-  theme_minimal()
+  theme_minimal() +
+  theme(text = element_text(family = "Times New Roman"))
 
 ```
 
 ## Examining Religious Differences
 
-This paper focused on the partisan differences in proclivity to believe false information. An interesting extension to this would examine the asymmetries in the propensity of different religious groups to endorse false political information. Many religions have their foundations on stories that seem unlikely to occur in the modern world, and the metaphorical nature of religion requires that you accept things that you cannot see (Shapiro, 2017). To examine the relationship between religious subgroups and the propensity to accept false information, I will add a religion term to the analyses included of the original Table 1 to see if any religious groups exhibited a greater proclivity to accept false information.
+This paper focused on the partisan differences in proclivity to believe false information. An interesting extension to this would examine the asymmetries in the propensity of different religious groups to endorse false political information. Many religions have their foundations on stories that seem unlikely to occur in the modern world, and the metaphorical nature of religion requires that you accept things that you cannot see (Shapiro, 2017). To examine the relationship between religious subgroups and the propensity to accept false information, I will add a religion term to the analyses included in the original Table 1 to see if any religious groups exhibited a greater proclivity to accept false information.
 
 ```{r table1_relig, results = "asis"}
 
@@ -436,7 +439,7 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
 
 ```
 
-The results vary between religious groups. Protestants serve as the baseline category, and the other coefficients represent changes from that baseline. We see that, when controlling for the specific rumor, party identification, and party consistency, Atheists are less likely than Protestants to accept any of the rumors. In some of the regressions, Buddhists, Muslims, and individuals in the non-specific Christian category exhibited a greater tendency than Protestants to believe the false rumors, while Unitarians and Agnostics exhibited a lower tendency to accept the false information relative to Protestants. Generally, the categories that reject religion altogether or take a more liberal view--such as Atheist, Agnostic, or Unitarian--tend to exhibit a lower tendency than Protestants to accept this false information. This makes intuitive sense, since these religious categories require less imagination. And, supporting the conclusion of the original study, neither party exhibits a greater tendency to endorse false information, even when controlling for religion.
+The results vary between religious groups. Protestants serve as the baseline category, and the other coefficients represent changes from that baseline. We see that, when controlling for the specific rumor, party identification, and party consistency, Atheists are less likely than Protestants to accept any of the rumors. In some of the regressions, Buddhists, Muslims, and individuals in the non-specific Christian category exhibited a greater tendency than Protestants to believe the false rumors, while Unitarians and Agnostics exhibited a lower tendency to accept the false information relative to Protestants. Generally, the categories that reject religion altogether or take a more liberal view--such as Atheist, Agnostic, or Unitarian--tend to exhibit a lower tendency than Protestants to accept this false information.  This makes intuitive sense since these categories entail fewer beliefs that require the acceptance of events that seem far from reality. And, supporting the conclusion of the original study, neither party exhibits a greater tendency to endorse false information, even when controlling for religion.
 
 ## Extending to Examine Tendency to Share Rumors Online
 
@@ -452,8 +455,16 @@ Both the original study and this replication found no evidence that citizens of 
 
 # References
 
+Frenkel, S. (2020, November 23). How Misinformation ‘Superspreaders’ Seed False Election Theories—The New York Times. The New York Times. https://www.nytimes.com/2020/11/23/technology/election-misinformation-facebook-twitter.html
+
 Hlavac, M. (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables. R package
   version 5.2.1. https://CRAN.R-project.org/package=stargazer
+
+Justwan, F., Baumgaertner, B., Carlisle, J. E., Clark, A. K., & Clark, M. (2018). Social media echo chambers and satisfaction with democracy among Democrats and Republicans in the aftermath of the 2016 US elections. Journal of Elections, Public Opinion and Parties, 28(4), 424–442. https://doi.org/10.1080/17457289.2018.1434784
+
+Ryan, T., & Aziz, A. (2020). Is the Political Right More Credulous?: Experimental Evidence Against Asymmetric Motivations to Believe False Political Information. The Journal of Politics. https://doi.org/10.1086/711133
+
+Shapiro, R. R. (2017). Has religion primed us for fake news?(ROADSIDE ASSISTANCE FOR THE SPIRITUAL TRAVELER). Spirituality & Health, 20(2), 19-.
 
 Wickham, H. & Miller, E. (2020). haven: Import and Export 'SPSS', 'Stata' and 'SAS' Files. R
   package version 2.3.1. https://CRAN.R-project.org/package=haven
@@ -467,7 +478,7 @@ Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Softwar
 
 ## A note on p-values and the marking of significant coefficients
 
-The regression tables in the main text of this analysis are nearly exact matches to the original study in terms of formatting. However, Professor Gill has quite the distaste for regression tables that denote coefficients with p-values below a certain level with stars. The difference between a p-value of $0.04999$ and $0.05001$ is rather arbitrary, and it does seem silly that one would warrant rejecting the null hypothesis while the other would not. I opted to include the regression stars in the tables in the main text to (a) match the formatting by the original author, and (b) serve as a visual guide for which coefficients are significant and which are not. While the difference between $0.04999$ and $0.05001$ is likely negligible, the difference between $0.04999$ and $0.5$ is not, and the stars serve as a quick visual guide to draw attention to coefficients that may be noteworthy. To distinguish between the first two pairs, however, it is helpful to see the full p-values. For that reason, I will include this reiteration of Table 1, which is the only non-Supplemental Information table in the analysis, that has p-values in lieu of stars:
+The regression tables in the main text of this analysis are nearly exact matches to the original study in terms of formatting. However, Professor Gill has quite the distaste for regression tables that denote coefficients with p-values below a certain level with stars. The difference between a p-value of $0.04999$ and $0.05001$ is rather arbitrary, and it does seem silly that one would warrant rejecting the null hypothesis while the other would not. I opted to include the regression stars in the tables in the main text to (a) match the formatting by the original authors, and (b) serve as a visual guide for which coefficients are significant and which are not. While the difference between $0.04999$ and $0.05001$ is negligible, the difference between $0.04999$ and $0.7$ is not, and the stars serve as a quick visual guide to draw attention to noteworthy coefficients. Displaying the full p-values, however helps to distinguish between incredibly close coefficients that lie on opposite sides of the significance level. For that reason, I will include this reiteration of Table 1, which is the only table included in the authors' main analysis, that has p-values in lieu of stars:
 
 ```{r app_table1, results="asis"}
 
@@ -519,14 +530,13 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
           omit.stat = c("f", "LL", "ser"),
           report=("vc*p"),
           star.cutoffs = NA,
-          omit.table.layout = "n",
           add.lines = list(c("Partisan Leaners", rep(c("Included", "Excluded"), 3))))
 
 ```
 
 -------------------------------------------------------------------------------------
 
-[^data-source]:The Journal of Politics published the original study. The Harvard Dataverse has replication data and Stata code available at DOI 10.7910/DVN/9ERCTY.
+[^data-source]: The Journal of Politics accepted the original study on May 19, 2020. The Harvard Dataverse has replication data and Stata code available at DOI 10.7910/DVN/9ERCTY.
 
-[^state-choice]: Researchers specifically chose the swing states of Ohio and Wisconsin as the states of focus since politicians from either state could plausibly be either Republican or Democrat. 
+[^state-choice]: The researchers specifically chose the swing states of Ohio and Wisconsin as the states of focus since politicians from either state could plausibly be either Republican or Democrat. 
 
