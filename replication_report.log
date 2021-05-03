@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  1 MAY 2021 20:20
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.5.8)  2 MAY 2021 10:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -693,19 +693,20 @@ LaTeX Font Info:    Try loading font information for TS1+lmr on input line 116.
 File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 ) [1
 
-{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
-Overfull \hbox (2.7313pt too wide) in paragraph at lines 289--324
+{/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
+
+Overfull \hbox (2.7313pt too wide) in paragraph at lines 307--342
  [][] 
  []
 
-[3] [4] [5]
+[4] [5]
 <replication_report_files/figure-latex/plot_table_1-1.pdf, id=63, 499.8675pt x 
 194.7275pt>
 File: replication_report_files/figure-latex/plot_table_1-1.pdf Graphic file (ty
 pe pdf)
 <use replication_report_files/figure-latex/plot_table_1-1.pdf>
 Package pdftex.def Info: replication_report_files/figure-latex/plot_table_1-1.p
-df  used on input line 429.
+df  used on input line 447.
 (pdftex.def)             Requested size: 469.76872pt x 183.00226pt.
 [6]
 <replication_report_files/figure-latex/plot_study2-1.pdf, id=73, 499.8675pt x 1
@@ -714,35 +715,35 @@ File: replication_report_files/figure-latex/plot_study2-1.pdf Graphic file (typ
 e pdf)
 <use replication_report_files/figure-latex/plot_study2-1.pdf>
 Package pdftex.def Info: replication_report_files/figure-latex/plot_study2-1.pd
-f  used on input line 434.
+f  used on input line 452.
 (pdftex.def)             Requested size: 469.76872pt x 183.00226pt.
 
-Overfull \hbox (1.77324pt too wide) in paragraph at lines 455--512
+Overfull \hbox (1.77324pt too wide) in paragraph at lines 473--530
  [][] 
  []
 
 [7 <./replication_report_files/figure-latex/plot_table_1-1.pdf> <./replication_
 report_files/figure-latex/plot_study2-1.pdf>] [8] [9] [10]
-Overfull \hbox (16.55096pt too wide) in paragraph at lines 647--680
+Overfull \hbox (16.55096pt too wide) in paragraph at lines 677--710
  [][] 
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 684.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 714.
 [11]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 684.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 714.
 (./replication_report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 684.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 684.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 714.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 714.
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 14200 strings out of 492616
- 210924 string characters out of 6129482
- 337662 words of memory out of 5000000
+ 14202 strings out of 492616
+ 210944 string characters out of 6129482
+ 335664 words of memory out of 5000000
  17768 multiletter control sequences out of 15000+600000
- 67849 words of font info for 110 fonts, out of 8000000 for 9000
+ 67885 words of font info for 111 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  36i,10n,39p,817b,339s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/lo
@@ -759,10 +760,10 @@ e1/public/lm/lmr7.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm
 /lmr8.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmri10.pfb>
 </usr/local/texlive/2019/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/loca
 l/texlive/2019/texmf-dist/fonts/type1/public/lm/lmsy7.pfb>
-Output written on replication_report.pdf (11 pages, 640215 bytes).
+Output written on replication_report.pdf (11 pages, 641608 bytes).
 PDF statistics:
- 250 PDF objects out of 1000 (max. 8388607)
- 217 compressed objects within 3 object streams
+ 253 PDF objects out of 1000 (max. 8388607)
+ 220 compressed objects within 3 object streams
  52 named destinations out of 1000 (max. 500000)
  14467 words of extra memory for PDF output out of 17280 (max. 10000000)
 

@@ -55,7 +55,7 @@ for (package in my_packages) {
 # **CROSS-REFERENCE WITH CHECKLIST ON CANVAS**
 
 # - parenthetical citation of the original article?
-# - interpret the results displayed in the tables
+# - interpret the results displayed in the tables... do we need to single out coefficietns and say that "an increase in one unit of _____ is associated with a X unit increase/decrease of ____
 # - can I leave the stars?
 
 ```
@@ -64,11 +64,11 @@ for (package in my_packages) {
 
 ## Introduction
 
-With the prevalence of claims of election fraud and Q-Anon conspiracy theories, it seems as if Republican voters exhibit a greater tendency to follow conspiracy theories. Does the prevalence of far-right conspiracy theories result from a greater supply of such rumors spread by the political elite or a greater likelihood of believing false information? Previous research about the propensity to accept false information does not differentiate between supply-side and demand-side explanations. In the case of misinformation, *supply-side* explanations have to do with the effectiveness of political elites in spreading such information, and *demand-side* explanations involve the likelihood of citizens believing false information upon receipt. This study focuses on the demand side and examines if Republicans or Democrats believe false political information at different rates (Ryan & Aziz, 2020).[^data-source]
+With the prevalence of claims of election fraud and Q-Anon conspiracy theories, it seems as if Republican voters exhibit a greater tendency to follow conspiracy theories. Does the prevalence of far-right conspiracy theories result from a greater supply of such rumors spread by the political elite or a greater likelihood of believing false information? Previous research about the propensity to accept false information does not differentiate between supply-side and demand-side explanations. In the case of misinformation, *supply-side* explanations have to do with the effectiveness of political elites in spreading such information, and *demand-side* explanations involve the likelihood of citizens believing false information upon receipt. This study focuses on the demand side and examines if Republicans exhibit a greater propensity to believe false political information (Ryan & Aziz, 2020).[^data-source]
 
 ## Methods
 
-The original researchers conducted a carefully designed experiment to reveal any asymmetries in the proclivity of citizens to endorse false political information (Ryan & Aziz, 2020). The experiment utilized a probability-based, representative sample of Americans via the National Opinion Research Center's AmeriSpeak Panel. Participants reported their partisanship before the experiment. Researchers presented the following questions in a randomized order:
+The original researchers conducted a carefully designed experiment to reveal any partisan asymmetries in the tendency to endorse false political information (Ryan & Aziz, 2020). The experiment utilized a probability-based, representative sample of Americans via the National Opinion Research Center's AmeriSpeak Panel. Participants reported their partisanship before the experiment. Researchers presented the following questions in a randomized order:
   
   + Ohio[^state-choice] item: Did [Party] legislators in Ohio accept laundered money from a group of Canadian Steel
 manufacturers, hoping to improve their business dealings in the state? 
@@ -82,7 +82,7 @@ Using the results of this experiment, the study authors examined the relationshi
 
 ## Conclusion
 
-Ultimately, the researchers did not find evidence that citizens of either party exhibit a greater tendency to endorse false political information. This runs contrary to previous work in the field [source] and supports the conclusion that partisan asymmetries in conspiracy theories largely owe themselves to a greater *supply* of false information rather than a greater *demand*.
+Ultimately, the results from this study reveal that Democrats and Republicans endorse false information about political opponents at approximately the same rate. Therefore, the researchers failed to find sufficient evidence that Republicans exhibit a greater propensity to believe such rumors. These findings stand in contrast to the implications of previous findings that conservatism drives motivated cognition (Jost et al., 2018). One must note, however, that the researchers do not conclude that false beliefs exist in equal numbers among Democrats and Republicans. Rather, the study reveals that one side does not exhibit any underlying psychological mechanisms that makes them more likely to accept false information in favor of one's side. These results support the prevalence of political misinformation on the right exists as a result of greater *supply* of false information rather than a greater *demand*.
 
 # Replication
 
@@ -160,6 +160,8 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
           add.lines = list(c("Partisan Leaners", rep(c("Included", "Excluded"), 3))))
 
 ```
+
+The results reveal that randomizing the party in the rumor induced partisan bias, as respondents rated rumors as true at greater rates when they were consistent with their party identification. The interaction terms, however, reveal that this relationship did not differ between the parties. Columns 5 and 6 pool the rumors together and reveal nearly identical partisan bias between Democrats and Republicans. The replication of the results support the researchers' conclusion that Democrats and Republicans endorse false information about political opponents at approximately the same rate.
 
 ## Supplemental Information
 
@@ -441,7 +443,7 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
 
 The results vary between religious groups. Protestants serve as the baseline category, and the other coefficients represent changes from that baseline. We see that, when controlling for the specific rumor, party identification, and party consistency, Atheists are less likely than Protestants to accept any of the rumors. In some of the regressions, Buddhists, Muslims, and individuals in the non-specific Christian category exhibited a greater tendency than Protestants to believe the false rumors, while Unitarians and Agnostics exhibited a lower tendency to accept the false information relative to Protestants. Generally, the categories that reject religion altogether or take a more liberal view--such as Atheist, Agnostic, or Unitarian--tend to exhibit a lower tendency than Protestants to accept this false information.  This makes intuitive sense since these categories entail fewer beliefs that require the acceptance of events that seem far from reality. And, supporting the conclusion of the original study, neither party exhibits a greater tendency to endorse false information, even when controlling for religion.
 
-## Extending to Examine Tendency to Share Rumors Online
+## Extending to Examine Proclivity to Share Rumors Online
 
 The analysis at the focus of this replication focused on distinguishing whether the current environment of misinformation has to do with differences in supply or demand of such false news, and it ultimately concluded that the rise of far-right conspiracy theories has more to do with the supply rather than an increased demand from Republicans. However, the supply becomes skewed if Republicans who believe conspiracy theories are more likely to spread these theories than Democrats who believe false information. Given the role of social media platforms in 2016 election interference and the proliferation of 2020 election fraud conspiracy theories (Frenkel, 2020), I would like to extend this study to not only assess the proclivity to believe and agree with false information, but to also examine whether one party or another is more likely to share this false information with others. That is, rather than simply accepting something as truth, are either Democrats or Republicans more likely to spread this information to other people through an online medium? Unfortunately, that data does not exist, so this extension would require an additional experiment.
 
@@ -449,16 +451,21 @@ Previous research has focused on differential effects of social media on the two
 
 # Conclusion
 
-Both the original study and this replication found no evidence that citizens of either party exhibit a greater tendency to endorse false political information. This runs contrary to previous work in the field [source] and supports the conclusion that partisan asymmetries in conspiracy theories largely owe themselves to a greater *supply* of false information rather than a greater *demand*. In extending the results of the analysis, however, a preliminary regression did find some asymmetries in the propensity of particular religious groups to accept false information. This, alongside a study examining the propensity of the different parties to share fake news through social media, warrants future investigation.
+Both the original study and this replication found no evidence that citizens of either party exhibit a greater tendency to endorse false political information. This runs contrary to previous work in the field (Jost et al., 2018) and supports the conclusion that partisan asymmetries in conspiracy theories largely owe themselves to a greater *supply* of false information rather than a greater *demand*. In extending the results of the analysis, a preliminary regression did find some asymmetries in the propensity of particular religious groups to accept false information. With the addition of a religion control term, this regression still lacked any asymmetry between the parties and proclivity to endorse false information. This pattern among religious groups, alongside a study examining the propensity of the different parties to share fake news through social media, warrants future investigation.
 
 \newpage
 
 # References
 
+Chang, W. (2014). extrafont: Tools for using fonts. R package version 0.17.
+  https://CRAN.R-project.org/package=extrafont
+
 Frenkel, S. (2020, November 23). How Misinformation ‘Superspreaders’ Seed False Election Theories—The New York Times. The New York Times. https://www.nytimes.com/2020/11/23/technology/election-misinformation-facebook-twitter.html
 
 Hlavac, M. (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables. R package
   version 5.2.1. https://CRAN.R-project.org/package=stargazer
+
+Jost, J. T., van der Linden, S., Panagopoulos, C., & Hardin, C. D. (2018). Ideological asymmetries in conformity, desire for shared reality, and the spread of misinformation. Current Opinion in Psychology, 23, 77–83. https://doi.org/10.1016/j.copsyc.2018.01.003
 
 Justwan, F., Baumgaertner, B., Carlisle, J. E., Clark, A. K., & Clark, M. (2018). Social media echo chambers and satisfaction with democracy among Democrats and Republicans in the aftermath of the 2016 US elections. Journal of Elections, Public Opinion and Parties, 28(4), 424–442. https://doi.org/10.1080/17457289.2018.1434784
 
