@@ -50,16 +50,6 @@ for (package in my_packages) {
 
 ```
 
-```{r notes}
-
-# **CROSS-REFERENCE WITH CHECKLIST ON CANVAS**
-
-# - parenthetical citation of the original article?
-# - interpret the results displayed in the tables... do we need to single out coefficietns and say that "an increase in one unit of _____ is associated with a X unit increase/decrease of ____
-# - can I leave the stars?
-
-```
-
 # Overview of the original paper
 
 ## Introduction
@@ -82,9 +72,9 @@ Using the results of this experiment, the study authors examined the relationshi
 
 ## Conclusion
 
-Ultimately, the results from this study reveal that Democrats and Republicans endorse false information about political opponents at approximately the same rate. Therefore, the researchers failed to find sufficient evidence that Republicans exhibit a greater propensity to believe such rumors. These findings stand in contrast to the implications of previous findings that conservatism drives motivated cognition (Jost et al., 2018). One must note, however, that the researchers do not conclude that false beliefs exist in equal numbers among Democrats and Republicans. Rather, the study reveals that one side does not exhibit any underlying psychological mechanisms that makes them more likely to accept false information in favor of one's side. These results support the prevalence of political misinformation on the right exists as a result of greater *supply* of false information rather than a greater *demand*.
+Ultimately, the results from this study reveal that Democrats and Republicans endorse false information about political opponents at approximately the same rate. Therefore, the researchers failed to find sufficient evidence that Republicans exhibit a greater propensity to believe such rumors. These findings stand in contrast to the implications of previous findings that conservatism drives motivated cognition (Jost et al., 2018). One must note, however, that the researchers do not conclude that false beliefs exist in equal numbers among Democrats and Republicans. Rather, the study reveals that one side does not exhibit any underlying psychological mechanisms that make them more likely to accept false information in favor of one's side. These results support the prevalence of political misinformation on the right exists as a result of a greater *supply* of false information rather than a greater *demand*.
 
-# Replication
+# Replication[^github]
 
 ## Main Analysis
 
@@ -161,11 +151,11 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
 
 ```
 
-The results reveal that randomizing the party in the rumor induced partisan bias, as respondents rated rumors as true at greater rates when they were consistent with their party identification. The interaction terms, however, reveal that this relationship did not differ between the parties. Columns 5 and 6 pool the rumors together and reveal nearly identical partisan bias between Democrats and Republicans. The replication of the results support the researchers' conclusion that Democrats and Republicans endorse false information about political opponents at approximately the same rate.
+The results reveal that party randomization induced partisan bias, as respondents rated rumors as true at greater rates when they were consistent with their party identification. The insignificant, near-zero interaction terms, however, reveal that this relationship did not differ between the parties. Columns 5 and 6 pool the rumors together and reveal nearly identical partisan bias between Democrats and Republicans. The replicated results support the researchers' conclusion that Democrats and Republicans endorse false information about political opponents at approximately the same rate.
 
 ## Supplemental Information
 
-Because the replication of the models included in the main study went rather seamlessly on my end, I elected to replicate several tables from the Supplemental Information (SI) portion of the study. Many of these secondary results document and detail a pre-registered replication study, referred to as Study 2. 
+Because the regressions from the main study replicated rather seamlessly, I elected to replicate several tables from the Supplemental Information (SI) portion of the study. Many of these secondary results document and detail a pre-registered replication study, referred to as Study 2. 
 
 First, I replicated Table SI-2. This regression mirrors Table 1 but includes an additional interaction term to see if the Republican and Consistent interaction differs between the Dynata and Positly portions of Study 2. The researchers tasked two market research firms, Dynata and Positly, to recruit and survey respondents on their behalf. The main analysis pooled survey responses, and this regression aims to see if the relationship between Republican and party consistency varied among respondents from the two different surveys.
 
@@ -231,7 +221,7 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
 
 ```
 
-Next, Table SI-3 replaces the party identification variable from the main analysis with a conservative indicator constructed from the 7-point ideology score. Because nearly half of respondents reported their ideology as "middle of the road," this analysis draws from a much smaller sample size. The interaction term does not provide support for any asymmetry in credulity by respondent ideology.
+Next, Table SI-3 replaces the party identification variable from the main analysis with a conservative indicator constructed from the 7-point ideology score. Because nearly half of respondents reported their ideology as "middle of the road," this analysis draws from a much smaller sample size. The interaction term does not provide support for any ideological asymmetry in believing the rumor.
 
 ```{r table_si3, results = "asis"}
 
@@ -485,7 +475,7 @@ Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Softwar
 
 ## A note on p-values and the marking of significant coefficients
 
-The regression tables in the main text of this analysis are nearly exact matches to the original study in terms of formatting. However, Professor Gill has quite the distaste for regression tables that denote coefficients with p-values below a certain level with stars. The difference between a p-value of $0.04999$ and $0.05001$ is rather arbitrary, and it does seem silly that one would warrant rejecting the null hypothesis while the other would not. I opted to include the regression stars in the tables in the main text to (a) match the formatting by the original authors, and (b) serve as a visual guide for which coefficients are significant and which are not. While the difference between $0.04999$ and $0.05001$ is negligible, the difference between $0.04999$ and $0.7$ is not, and the stars serve as a quick visual guide to draw attention to noteworthy coefficients. Displaying the full p-values, however helps to distinguish between incredibly close coefficients that lie on opposite sides of the significance level. For that reason, I will include this reiteration of Table 1, which is the only table included in the authors' main analysis, that has p-values in lieu of stars:
+The regression tables in the main text of this analysis are nearly exact matches to the original study in terms of formatting. However, Professor Gill has quite the distaste for regression tables that denote coefficients with p-values below a certain level with stars. The difference between a p-value of $0.04999$ and $0.05001$ is rather arbitrary, and it does seem silly that one would warrant rejecting the null hypothesis while the other would not. I opted to include the regression stars in the tables in the main text to (a) match the formatting by the original authors, and (b) serve as a visual guide for which coefficients are significant and which are not. While the difference between $0.04999$ and $0.05001$ is negligible, the difference between $0.04999$ and $0.7$ is not, and the stars serve as a quick visual guide to draw attention to noteworthy coefficients. With the standard errors, one can easily calculate a t-statistic and judge the strength of the results for themselves. For that reason, I will include this reiteration of Table 1 without stars but with the estimated coefficients and standard errors:
 
 ```{r app_table1, results="asis"}
 
@@ -535,9 +525,9 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
           title = "Table 1: Democrats and Republicans are Equally Subject to Consistency Pressures",
           type = "latex", table.placement = "H", header = FALSE,
           omit.stat = c("f", "LL", "ser"),
-          report=("vc*p"),
           star.cutoffs = NA,
-          add.lines = list(c("Partisan Leaners", rep(c("Included", "Excluded"), 3))))
+          add.lines = list(c("Partisan Leaners", rep(c("Included", "Excluded"), 3))),
+          omit.table.layout = "n")
 
 ```
 
@@ -546,4 +536,6 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
 [^data-source]: The Journal of Politics accepted the original study on May 19, 2020. The Harvard Dataverse has replication data and Stata code available at DOI 10.7910/DVN/9ERCTY.
 
 [^state-choice]: The researchers specifically chose the swing states of Ohio and Wisconsin as the states of focus since politicians from either state could plausibly be either Republican or Democrat. 
+
+[^github]: The code and data for this replication is located on my GitHub, at https://github.com/kayla-manning/believe-false-info
 
