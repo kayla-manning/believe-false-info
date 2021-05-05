@@ -475,7 +475,7 @@ Wickham et al., (2019). Welcome to the tidyverse. Journal of Open Source Softwar
 
 ## A note on p-values and the marking of significant coefficients
 
-The regression tables in the main text of this analysis are nearly exact matches to the original study in terms of formatting. However, Professor Gill has quite the distaste for regression tables that denote coefficients with p-values below a certain level with stars. The difference between a p-value of $0.04999$ and $0.05001$ is rather arbitrary, and it does seem silly that one would warrant rejecting the null hypothesis while the other would not. I opted to include the regression stars in the tables in the main text to (a) match the formatting by the original authors, and (b) serve as a visual guide for which coefficients are significant and which are not. While the difference between $0.04999$ and $0.05001$ is negligible, the difference between $0.04999$ and $0.7$ is not, and the stars serve as a quick visual guide to draw attention to noteworthy coefficients. With the standard errors, one can easily calculate a t-statistic and judge the strength of the results for themselves. For that reason, I will include this reiteration of Table 1 without stars but with the estimated coefficients and standard errors:
+The regression tables in the main text of this analysis almost exactly mirror the formatting of the original study. However, the stars for significant coefficients can mislead readers if they do not pay attention to the standard errors and relative significance of coefficients. The difference between a p-value of $0.04999$ and $0.05001$ is rather arbitrary, but only the first would reject the null hypothesis at an $\alpha-0.05$ significance level. I opted to include the regression stars in the tables in the main text to (a) match the formatting by the original authors, and (b) flag significant coefficients. While the difference between $0.04999$ and $0.05001$ is negligible, the difference between $0.04999$ and $0.7$ is not, and the stars draw attention to noteworthy coefficients. With the standard errors, one can easily calculate a t-statistic and judge the strength of the results for themselves. For that reason, I will include this reiteration of Table 1 without stars but with the estimated coefficients and standard errors:
 
 ```{r app_table1, results="asis"}
 
@@ -537,5 +537,5 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
 
 [^state-choice]: The researchers specifically chose the swing states of Ohio and Wisconsin as the states of focus since politicians from either state could plausibly be either Republican or Democrat. 
 
-[^github]: The code and data for this replication is located on my GitHub, at https://github.com/kayla-manning/believe-false-info
+[^github]: The code and data for this replication is located in a GitHub repository at [https://github.com/kayla-manning/believe-false-info](https://github.com/kayla-manning/believe-false-info).
 
