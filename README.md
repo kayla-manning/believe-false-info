@@ -13,14 +13,14 @@ Ryan, T., & Aziz, A. (2020). Is the Political Right More Credulous?: Experimenta
 ## How to run the code:
 
 1. Clone and open the repository in RStudio.
-2. Open the `replication_report.Rmd` file.
+2. Open [replication_report.Rmd](replication_report.Rmd).
 3. Run this file, either by knitting the file to produce the final PDF, or executing one chunk at a time.
 
 ## Files included in this repository:
 
-- `replication_report.Rmd`: This file contains the code used to create the final replication, alongside my accompanying analyses. The file will install any packages if necessary, load the packages and data, and execute all regressions and analyses. Knitting this file will produce `replication_report.pdf`.
-- `replication_report.pdf`: This is the final report in PDF form; this document hides the underlying R code and displays the code output with the written report.
-- `replication_data`: This folder contains all of the replication data from the original study, downloaded from the Harvard [Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/9ERCTY).
+- [replication_report.Rmd](replication_report.Rmd): This file contains the code used to create the final replication, alongside my accompanying analyses. The file will install any packages if necessary, load the packages and data, and execute all regressions and analyses. Knitting this file will produce `replication_report.pdf`.
+- [replication_report.pdf](replication_report.pdf): This is the final report in PDF form; this document hides the underlying R code and displays the code output with the written report.
+- [replication_data](replication_data): This folder contains all of the replication data from the original study, downloaded from the [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/9ERCTY).
 
 ## R environment
 
