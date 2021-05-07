@@ -50,7 +50,7 @@ for (package in my_packages) {
 
 ```
 
-# Overview of the original paper
+# Study Overview
 
 ## Introduction
 
@@ -421,7 +421,7 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
           column.labels = c("Ohio", "Ohio", "Wisconsin", "Wisconsin",
                         "Pooled", "Pooled"),
           dep.var.labels = "Belief in false political rumor",
-          title = "Table 1 with Religious Controls: Some Religious Groups Are More Likely to Accept False Information",
+          title = "Table 1.1: Some Religious Groups Are More Likely to Accept False Information",
           type = "latex", table.placement = "H", header = FALSE,
           omit.stat = c("f", "LL", "ser"),
           notes = "Protestant serves as the baseline religion category in this regression",
@@ -521,7 +521,7 @@ stargazer(mod1, mod2, mod3, mod4, mod5, mod6,
           column.labels = c("Ohio", "Ohio", "Wisconsin", "Wisconsin",
                         "Pooled", "Pooled"),
           dep.var.labels = "Belief in false political rumor",
-          title = "Table 1: Democrats and Republicans are Equally Subject to Consistency Pressures",
+          title = "Table 1.2: Democrats and Republicans are Equally Subject to Consistency Pressures",
           type = "latex", table.placement = "H", header = FALSE,
           omit.stat = c("f", "LL", "ser"),
           star.cutoffs = NA,
