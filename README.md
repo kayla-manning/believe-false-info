@@ -18,8 +18,8 @@ Ryan, T., & Aziz, A. (2020). Is the Political Right More Credulous?: Experimenta
 
 ## Files included in this repository:
 
-- [replication_report.Rmd](replication_report.Rmd): This file contains the code used to create the final replication, alongside my accompanying analyses. The file will install any packages if necessary, load the packages and data, and execute all regressions and analyses. Knitting this file will produce `replication_report.pdf`.
-- [replication_report.pdf](replication_report.pdf): This is the final report in PDF form; this document hides the underlying R code and displays the code output with the written report.
+- [replication_report.Rmd](replication_report.Rmd): This file contains the code used to create the final replication and my accompanying analyses. The file will install any packages if necessary, load the packages and data, and execute all regressions and analyses. Knitting this file will produce `replication_report.pdf`.
+- [replication_report.pdf](replication_report.pdf): This is the final report in PDF form; this document does not display the underlying R code and only displays the code output with the written report.
 - [replication_data](replication_data): This folder contains all of the replication data from the original study, downloaded from the [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/9ERCTY).
 
 ## R environment
